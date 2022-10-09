@@ -1,10 +1,10 @@
 import logoDark from "../assets/logo-dark.svg";
 import { Button } from "./Button";
 import { Add } from "./icons/Add";
+import { useActiveBoardName } from "../hooks/useActiveBoardName";
 
 export const Header = () => {
-  // TODO: get board name from active selected board
-  const activeBoardName = "Platform Launch";
+  const activeBoardName = useActiveBoardName();
 
   // TODO: get information about boards & columns from boards-context
   const isBoardsEmpty = true;
