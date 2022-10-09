@@ -1,14 +1,13 @@
 import { useState } from "react";
 
+import { Header } from "./components/Header";
+
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   return (
     <div className="flex h-screen flex-col">
-      <header className="flex h-20">
-        <div className="w-80 border-r border-r-lines-light">Logo</div>
-        <div>Platform Launch</div>
-      </header>
+      <Header />
       <div className="relative flex h-full">
         <aside
           className={`absolute top-0 left-0 h-full w-80 border-r border-r-lines-light transition-transform ${
