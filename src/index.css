@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .heading-xl {
+    @apply text-[24px] font-bold leading-[30px] text-black;
+  }
+  .heading-l {
+    @apply text-[18px] font-bold leading-[23px] text-black;
+  }
+  .heading-m {
+    @apply text-[15px] font-bold leading-[19px] text-black;
+  }
+  .heading-s {
+    @apply text-[12px] font-bold leading-[15px] tracking-[2.4px] text-medium-grey;
+  }
+  .body-l {
+    @apply text-[13px] font-medium leading-[23px] text-dark-grey;
+  }
+  .body-m {
+    @apply text-[12px] font-bold leading-[15px] text-dark-grey;
+  }
+}
+
+@layer base {
+  html {
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+}
