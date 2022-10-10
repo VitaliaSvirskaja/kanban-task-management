@@ -7,13 +7,15 @@ import { HideSidebar } from "./icons/HideSidebar";
 
 interface Props {
   isSidebarVisible: boolean;
+  onClose: () => void;
 }
 
-export const Sidebar = ({ isSidebarVisible }: Props) => {
+export const Sidebar = ({ isSidebarVisible, onClose }: Props) => {
   const { boards, selectBoard, activeBoard } = useContext(boardContext);
+
   return (
     <aside
-      className={`absolute top-0 left-0 flex h-full w-80 flex-col border-r border-r-lines-light pr-6 transition-transform ${
+      className={`absolute top-0 left-0 z-40 flex h-full w-80 flex-col border-r border-r-lines-light bg-white pr-6 transition-transform ${
         isSidebarVisible ? "" : "-translate-x-full"
       }`}
     >
@@ -45,7 +47,8 @@ export const Sidebar = ({ isSidebarVisible }: Props) => {
         <Listelement
           icon={<HideSidebar />}
           text="Hide Sidebar"
-          className="text-medium-grey hover:text-primary"
+          className="mb-6 text-medium-grey hover:text-primary"
+          onClick={onClose}
         />
       </div>
     </aside>
