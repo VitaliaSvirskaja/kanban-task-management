@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { ShowSidebar } from "./components/icons/ShowSidebar";
+import { AddNewBoardDialog } from "./components/AddNewBoardDialog";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -23,6 +24,7 @@ export const App = () => {
             <ShowSidebar />
           </button>
           Content
+          <AddNewBoardDialog />
         </main>
 
         <Sidebar
