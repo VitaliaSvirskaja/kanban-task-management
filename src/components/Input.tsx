@@ -15,11 +15,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         placeholder="e.g. Web Design"
         ref={ref}
         {...inputProps}
-        className={`rounded border border-2 border-medium-grey/25 py-2 px-3 outline-0 hover:border-primary focus:border-primary ${
-          error === undefined ? "focus:border-primary" : "border-red-500"
+        className={`rounded border border-2 border-medium-grey/25 py-2 px-3 text-black outline-0 hover:border-primary focus:border-primary ${
+          error === undefined ? "focus:border-primary" : "border-red"
         }`}
       />
-      <span className="text-red-600 pl-1">{error}</span>
+      <span className="pl-1 text-xs text-red">{error}</span>
     </div>
   )
 );

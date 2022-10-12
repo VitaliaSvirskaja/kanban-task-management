@@ -18,7 +18,12 @@ type Inputs = {
 };
 
 export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
-  const { control, register, handleSubmit } = useForm<Inputs>({
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
     mode: "all",
   });
   const { fields, append, remove } = useFieldArray({
@@ -47,10 +52,22 @@ export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
             <Close onClick={onClose} />
           </div>
           <form
+            autoComplete="off"
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-start gap-3"
           >
-            <Input label="Name" type="text" {...register("boardName")} />
+            <Input
+              label="Name"
+              type="text"
+              {...register("boardName", {
+                validate: (input: string) => {
+                  if (input === "") {
+                    return "Can't be empty.";
+                  }
+                },
+              })}
+              error={errors.boardName?.message}
+            />
             <p className="body-m text-left text-medium-grey">Board Columns</p>
             {fields.map((field, index) => (
               <div key={field.id} className="flex w-full items-center gap-2">
