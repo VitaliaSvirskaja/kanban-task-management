@@ -16,7 +16,7 @@ export const ThemeSwitch = () => {
       <Switch
         checked={isThemeDark}
         onChange={setIsThemeDark}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full bg-primary hover:bg-primary-light`}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full bg-primary hover:bg-primary-light focus:outline-2 focus:outline-primary-light`}
       >
         <span
           className={`${

@@ -7,7 +7,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
 }
 
-// FIXME focus border primary - not blue
 export const Button = ({
   size = "large",
   variant = "primary",
@@ -17,7 +16,7 @@ export const Button = ({
   ...buttonProps
 }: Props) => (
   <button
-    className={`heading-m flex items-center justify-center gap-2 rounded-full px-6 transition-colors disabled:opacity-40 ${
+    className={`heading-m flex items-center justify-center gap-2 rounded-full px-6 transition-colors  focus:outline-2 focus:outline-primary disabled:opacity-40 ${
       variant === "primary"
         ? "bg-primary text-white hover:enabled:bg-primary-light"
         : variant === "secondary"

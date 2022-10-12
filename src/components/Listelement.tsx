@@ -13,7 +13,7 @@ export const Listelement = ({
 }: Props) => {
   return (
     <button
-      className={`heading-m flex w-full list-none items-center gap-4 rounded-r-full py-5 pr-6 pl-8 transition-colors hover:bg-primary/10 ${className}`}
+      className={`heading-m flex w-full list-none items-center gap-4 rounded-r-full py-5 pr-6 pl-8 transition-colors hover:bg-primary/10 focus:outline-2 focus:outline-primary ${className}`}
       {...buttonProps}
     >
       {icon}
