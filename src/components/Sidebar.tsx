@@ -9,14 +9,19 @@ import { ThemeSwitch } from "./ThemeSwitch";
 interface Props {
   isSidebarVisible: boolean;
   onClose: () => void;
+  onCreateNewBoard: () => void;
 }
 
-export const Sidebar = ({ isSidebarVisible, onClose }: Props) => {
+export const Sidebar = ({
+  isSidebarVisible,
+  onClose,
+  onCreateNewBoard,
+}: Props) => {
   const { boards, selectBoard, activeBoard } = useContext(boardContext);
 
   return (
     <aside
-      className={`absolute top-0 left-0 z-40 flex h-full w-80 flex-col border-r border-r-lines-light bg-white pr-6 transition-transform ${
+      className={`absolute top-0 left-0 z-30 flex h-full w-80 flex-col border-r border-r-lines-light bg-white pr-6 transition-transform ${
         isSidebarVisible ? "" : "-translate-x-full"
       }`}
     >
@@ -42,6 +47,7 @@ export const Sidebar = ({ isSidebarVisible, onClose }: Props) => {
             icon={<Add />}
             text="Create New Board"
             className="text-primary"
+            onClick={onCreateNewBoard}
           />
         </div>
         <div>
