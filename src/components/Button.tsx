@@ -7,6 +7,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
 }
 
+// FIXME focus border primary - not blue
 export const Button = ({
   size = "large",
   variant = "primary",
