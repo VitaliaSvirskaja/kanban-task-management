@@ -1,9 +1,12 @@
+import { useContext } from "react";
 import { Dialog } from "@headlessui/react";
 import { Input } from "./Input";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "./Button";
 import { Add } from "./icons/Add";
 import { Close } from "./icons/Close";
+import { CreateBoardDto } from "../model/CreateBoardDto";
+import { boardContext } from "../context/BoardContext";
 
 interface Props {
   isOpen: boolean;
@@ -18,6 +21,7 @@ type Inputs = {
 };
 
 export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
+  const { createBoard } = useContext(boardContext);
   const {
     control,
     register,
@@ -30,9 +34,15 @@ export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
     control,
     name: "boardColumns",
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    // TODO Interaktion mit API ergänzen
-    console.log(data);
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const createBoardDto: CreateBoardDto = {
+      title: data.boardName,
+      initialBoardColumnNames: data.boardColumns.map(
+        (boardColumn) => boardColumn.columnName
+      ),
+    };
+    await createBoard(createBoardDto);
     onClose();
   };
 
@@ -79,6 +89,7 @@ export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
               </div>
             ))}
             <div className=" flex w-full flex-col gap-3">
+              {/* TODO: loading indicator while waiting for response */}
               <Button
                 type="button"
                 size="small"

@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { boardContext } from "../context/BoardContext";
 import { Board } from "./icons/Board";
-import { Listelement } from "./Listelement";
+import { ListElement } from "./ListElement";
 import { Add } from "./icons/Add";
 import { HideSidebar } from "./icons/HideSidebar";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { Edit } from "./icons/Edit";
 
 interface Props {
   isSidebarVisible: boolean;
@@ -17,7 +18,8 @@ export const Sidebar = ({
   onClose,
   onCreateNewBoard,
 }: Props) => {
-  const { boards, selectBoard, activeBoard } = useContext(boardContext);
+  const { boards, selectBoard, activeBoard, deleteBoard } =
+    useContext(boardContext);
 
   return (
     <aside
@@ -30,7 +32,7 @@ export const Sidebar = ({
       <div className="flex flex-1 flex-col justify-between">
         <div>
           {boards.map((board) => (
-            <Listelement
+            <ListElement
               key={board.id}
               icon={<Board />}
               text={board.title}
@@ -40,10 +42,12 @@ export const Sidebar = ({
                   : "text-medium-grey hover:text-primary "
               }`}
               onClick={() => selectBoard(board.id)}
+              secondaryActionIcon={<Edit />}
+              onSecondaryAction={() => deleteBoard(board.id)}
             />
           ))}
 
-          <Listelement
+          <ListElement
             icon={<Add />}
             text="Create New Board"
             className="text-primary"
@@ -52,7 +56,7 @@ export const Sidebar = ({
         </div>
         <div>
           <ThemeSwitch />
-          <Listelement
+          <ListElement
             icon={<HideSidebar />}
             text="Hide Sidebar"
             className="mb-6 text-medium-grey hover:text-primary"
