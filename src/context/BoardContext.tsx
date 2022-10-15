@@ -42,6 +42,7 @@ export const BoardContextProvider = (props: PropsWithChildren) => {
     const createdBoard = await API.createBoard(createBoardDto);
     const updatedBoards: Array<Board> = [...boards, createdBoard];
     setBoards(updatedBoards);
+    setActiveBoardID(createdBoard.id);
   }
 
   async function deleteBoard(boardID: number) {
@@ -50,6 +51,9 @@ export const BoardContextProvider = (props: PropsWithChildren) => {
       (board) => board.id !== boardID
     );
     setBoards(updatedBoards);
+    if (boardID === activeBoardID) {
+      setActiveBoardID(updatedBoards[0]?.id ?? null);
+    }
   }
 
   return (
