@@ -24,14 +24,13 @@ export const BoardContextProvider = (props: PropsWithChildren) => {
   const [boards, setBoards] = useState<Array<Board>>([]);
   const [activeBoardID, setActiveBoardID] = useState<number | null>(null);
 
-  async function updateBoards() {
-    const fetchedBoards = await API.fetchBoards();
-    setBoards(fetchedBoards);
-    setActiveBoardID(fetchedBoards[0]?.id ?? null);
-  }
-
   useEffect(() => {
-    updateBoards();
+    async function initBoards() {
+      const fetchedBoards = await API.fetchBoards();
+      setBoards(fetchedBoards);
+      setActiveBoardID(fetchedBoards[0]?.id ?? null);
+    }
+    initBoards();
   }, []);
 
   function selectBoard(boardID: number) {
