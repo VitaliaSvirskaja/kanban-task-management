@@ -1,46 +1,35 @@
 import { useContext } from "react";
 import { Dialog } from "@headlessui/react";
 import { Input } from "./Input";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "./Button";
-import { Add } from "./icons/Add";
 import { Close } from "./icons/Close";
 import { CreateBoardDto } from "../model/CreateBoardDto";
 import { boardContext } from "../context/BoardContext";
 
 interface Props {
+  dialogName: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
 type Inputs = {
   boardName: string;
-  boardColumns: Array<{
-    columnName: string;
-  }>;
 };
 
 export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
   const { createBoard } = useContext(boardContext);
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
     mode: "all",
   });
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "boardColumns",
-  });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const createBoardDto: CreateBoardDto = {
       title: data.boardName,
-      initialBoardColumnNames: data.boardColumns.map(
-        (boardColumn) => boardColumn.columnName
-      ),
     };
     await createBoard(createBoardDto);
     onClose();
@@ -78,26 +67,9 @@ export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
               })}
               error={errors.boardName?.message}
             />
-            <p className="body-m text-left text-medium-grey">Board Columns</p>
-            {fields.map((field, index) => (
-              <div key={field.id} className="flex w-full items-center gap-2">
-                <Input
-                  type="text"
-                  {...register(`boardColumns.${index}.columnName`)}
-                />
-                <Close onClick={() => remove(index)} />
-              </div>
-            ))}
+
             <div className=" flex w-full flex-col gap-3">
               {/* TODO: loading indicator while waiting for response */}
-              <Button
-                type="button"
-                size="small"
-                variant="secondary"
-                text="Add New Column"
-                icon={<Add />}
-                onClick={() => append({ columnName: "" })}
-              />
               <Button
                 type="submit"
                 variant="primary"
