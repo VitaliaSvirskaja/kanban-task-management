@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, useState } from "react";
+import { ButtonHTMLAttributes, useState, MouseEvent } from "react";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;
@@ -17,6 +17,11 @@ export const ListElement = ({
 }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  function handleSecondaryActionClick(event: MouseEvent) {
+    event.stopPropagation();
+    onSecondaryAction?.();
+  }
+
   return (
     <button
       className={`heading-m flex w-full list-none items-center justify-between rounded-r-full py-5 pr-6 pl-8 transition-colors hover:bg-primary/10 focus:outline-2 focus:outline-primary ${className}`}
@@ -28,7 +33,9 @@ export const ListElement = ({
         {icon}
         <p>{text}</p>
       </div>
-      <div onClick={onSecondaryAction}>{isHovered && secondaryActionIcon}</div>
+      <div onClick={handleSecondaryActionClick}>
+        {isHovered && secondaryActionIcon}
+      </div>
     </button>
   );
 };
