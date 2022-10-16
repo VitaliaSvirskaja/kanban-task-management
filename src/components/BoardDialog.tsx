@@ -6,32 +6,55 @@ import { Button } from "./Button";
 import { Close } from "./icons/Close";
 import { CreateBoardDto } from "../model/CreateBoardDto";
 import { boardContext } from "../context/BoardContext";
+import { UpdateBoardDto } from "../model/UpdateBoardDto";
+import { Board } from "../model/Board";
 
 interface Props {
-  dialogName: string;
   isOpen: boolean;
   onClose: () => void;
+  variant: "create" | "edit";
+  selectedBoard: Board | null;
 }
 
 type Inputs = {
   boardName: string;
 };
 
-export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
-  const { createBoard } = useContext(boardContext);
+export const BoardDialog = ({
+  isOpen,
+  onClose,
+  variant,
+  selectedBoard,
+}: Props) => {
+  const { createBoard, updateBoard } = useContext(boardContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Inputs>({
     mode: "all",
+    defaultValues: {
+      boardName: selectedBoard?.title ?? "",
+    },
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const createBoardDto: CreateBoardDto = {
-      title: data.boardName,
-    };
-    await createBoard(createBoardDto);
+    if (variant === "create") {
+      const createBoardDto: CreateBoardDto = {
+        title: data.boardName,
+      };
+      await createBoard(createBoardDto);
+    }
+
+    if (variant === "edit" && selectedBoard !== null) {
+      const updateBoardDto: UpdateBoardDto = {
+        title: data.boardName,
+      };
+      await updateBoard(selectedBoard.id, updateBoardDto);
+    }
+
+    reset();
     onClose();
   };
 
@@ -40,14 +63,16 @@ export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       {/* Backdrop */}
       <div
-        className="fixed inset-0  bg-black/30 transition-transform"
+        className="fixed inset-0 bg-black/30 transition-transform"
         aria-hidden="true"
       />
       {/* Full screen container to center the dialog panel*/}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         <Dialog.Panel className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded bg-white p-8">
           <div className="flex items-center justify-between">
-            <Dialog.Title className="heading-l">Add New Board</Dialog.Title>
+            <Dialog.Title className="heading-l">
+              {variant === "create" ? "Add New Board" : "Edit Board"}
+            </Dialog.Title>
             <Close onClick={onClose} />
           </div>
           <form
@@ -74,7 +99,9 @@ export const AddNewBoardDialog = ({ isOpen, onClose }: Props) => {
                 type="submit"
                 variant="primary"
                 size="small"
-                text="Create New Board"
+                text={
+                  variant === "create" ? "Create New Board" : "Save Changes"
+                }
               />
             </div>
           </form>

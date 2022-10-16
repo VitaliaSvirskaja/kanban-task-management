@@ -1,5 +1,6 @@
 import { CreateBoardDto } from "../model/CreateBoardDto";
 import { Board } from "../model/Board";
+import { UpdateBoardDto } from "../model/UpdateBoardDto";
 
 const BASE_URL = "http://localhost:8080";
 
@@ -42,8 +43,28 @@ async function fetchBoards(): Promise<Array<Board>> {
   }
 }
 
+async function updateBoard(
+  boardID: number,
+  updateBoardDto: UpdateBoardDto
+): Promise<Board> {
+  try {
+    const response = await fetch(`${BASE_URL}/boards/${boardID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateBoardDto),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error while updating a board.");
+  }
+}
+
 export const API = {
   createBoard: createBoard,
   deleteBoard: deleteBoard,
   fetchBoards: fetchBoards,
+  updateBoard: updateBoard,
 };

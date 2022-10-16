@@ -2,11 +2,28 @@ import { useState } from "react";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { ShowSidebar } from "./components/icons/ShowSidebar";
-import { AddNewBoardDialog } from "./components/AddNewBoardDialog";
+import { BoardDialog } from "./components/BoardDialog";
+import { Board } from "./model/Board";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogVariant, setDialogVariant] = useState<"create" | "edit">(
+    "create"
+  );
+  const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
+
+  function handleCreateNewBoard() {
+    setDialogVariant("create");
+    setIsDialogOpen(true);
+    setSelectedBoard(null);
+  }
+
+  function handleEditBoard(board: Board) {
+    setDialogVariant("edit");
+    setIsDialogOpen(true);
+    setSelectedBoard(board);
+  }
 
   return (
     <div className="flex h-screen flex-col">
@@ -28,11 +45,15 @@ export const App = () => {
         <Sidebar
           isSidebarVisible={isSidebarVisible}
           onClose={() => setIsSidebarVisible(false)}
-          onCreateNewBoard={() => setIsDialogOpen(true)}
+          onCreateNewBoard={handleCreateNewBoard}
+          onEditBoard={handleEditBoard}
         />
-        <AddNewBoardDialog
+        <BoardDialog
+          key={selectedBoard?.id}
+          variant={dialogVariant}
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
+          selectedBoard={selectedBoard}
         />
       </div>
     </div>

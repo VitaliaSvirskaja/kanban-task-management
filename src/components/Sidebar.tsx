@@ -1,25 +1,27 @@
 import { useContext } from "react";
 import { boardContext } from "../context/BoardContext";
-import { Board } from "./icons/Board";
+import { Board as BoardIcon } from "./icons/Board";
 import { ListElement } from "./ListElement";
 import { Add } from "./icons/Add";
 import { HideSidebar } from "./icons/HideSidebar";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { Edit } from "./icons/Edit";
+import { Board } from "../model/Board";
 
 interface Props {
   isSidebarVisible: boolean;
   onClose: () => void;
   onCreateNewBoard: () => void;
+  onEditBoard: (board: Board) => void;
 }
 
 export const Sidebar = ({
   isSidebarVisible,
   onClose,
   onCreateNewBoard,
+  onEditBoard,
 }: Props) => {
-  const { boards, selectBoard, activeBoard, deleteBoard } =
-    useContext(boardContext);
+  const { boards, selectBoard, activeBoard } = useContext(boardContext);
 
   return (
     <aside
@@ -34,7 +36,7 @@ export const Sidebar = ({
           {boards.map((board) => (
             <ListElement
               key={board.id}
-              icon={<Board />}
+              icon={<BoardIcon />}
               text={board.title}
               className={`${
                 activeBoard === board.id
@@ -43,7 +45,7 @@ export const Sidebar = ({
               }`}
               onClick={() => selectBoard(board.id)}
               secondaryActionIcon={<Edit />}
-              onSecondaryAction={() => deleteBoard(board.id)}
+              onSecondaryAction={() => onEditBoard(board)}
             />
           ))}
 
