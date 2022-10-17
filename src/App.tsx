@@ -4,6 +4,7 @@ import { Sidebar } from "./components/Sidebar";
 import { ShowSidebar } from "./components/icons/ShowSidebar";
 import { BoardDialog } from "./components/BoardDialog";
 import { Board } from "./model/Board";
+import { BoardContent } from "./components/BoardContent";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -40,7 +41,7 @@ export const App = () => {
           >
             <ShowSidebar />
           </button>
-          Content
+          <BoardContent />
         </main>
         <Sidebar
           isSidebarVisible={isSidebarVisible}

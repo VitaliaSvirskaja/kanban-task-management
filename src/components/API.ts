@@ -1,6 +1,8 @@
 import { CreateBoardDto } from "../model/CreateBoardDto";
 import { Board } from "../model/Board";
 import { UpdateBoardDto } from "../model/UpdateBoardDto";
+import { BoardColumn } from "../model/BoardColumn";
+import { CreateColumnDto } from "../model/CreateColumnDto";
 
 const BASE_URL = "http://localhost:8080";
 
@@ -62,9 +64,39 @@ async function updateBoard(
   }
 }
 
+async function getColumns(boardID: number): Promise<Array<BoardColumn>> {
+  try {
+    const response = await fetch(`${BASE_URL}/boards/${boardID}/board-columns`);
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error while fetching board columns.");
+  }
+}
+
+async function createColumn(
+  createColumnDto: CreateColumnDto
+): Promise<BoardColumn> {
+  try {
+    const response = await fetch(`${BASE_URL}/board-columns`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(createColumnDto),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error while creating adding a new board column.");
+  }
+}
+
 export const API = {
   createBoard: createBoard,
   deleteBoard: deleteBoard,
   fetchBoards: fetchBoards,
   updateBoard: updateBoard,
+  getColumns: getColumns,
+  createColumn: createColumn,
 };
