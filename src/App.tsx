@@ -8,7 +8,8 @@ import { BoardContent } from "./components/BoardContent";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isBoardDialogOpen, setIsBoardDialogOpen] = useState(false);
+
   const [dialogVariant, setDialogVariant] = useState<"create" | "edit">(
     "create"
   );
@@ -16,13 +17,13 @@ export const App = () => {
 
   function handleCreateNewBoard() {
     setDialogVariant("create");
-    setIsDialogOpen(true);
+    setIsBoardDialogOpen(true);
     setSelectedBoard(null);
   }
 
   function handleEditBoard(board: Board) {
     setDialogVariant("edit");
-    setIsDialogOpen(true);
+    setIsBoardDialogOpen(true);
     setSelectedBoard(board);
   }
 
@@ -52,8 +53,8 @@ export const App = () => {
         <BoardDialog
           key={selectedBoard?.id}
           variant={dialogVariant}
-          isOpen={isDialogOpen}
-          onClose={() => setIsDialogOpen(false)}
+          isOpen={isBoardDialogOpen}
+          onClose={() => setIsBoardDialogOpen(false)}
           selectedBoard={selectedBoard}
         />
       </div>
