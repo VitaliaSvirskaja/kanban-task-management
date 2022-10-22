@@ -24,7 +24,7 @@ export const Button = ({
         : variant === "destructive"
         ? "bg-red text-white hover:enabled:bg-red-light"
         : ""
-    } ${size === "large" ? "py-4" : "py-3 text-[13px]"} ${className}`}
+    } ${size === "large" ? "py-4" : "py-3 text-[13px]"} ${className ?? ""}`}
     {...buttonProps}
   >
     {icon}
