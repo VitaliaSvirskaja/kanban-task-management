@@ -1,5 +1,8 @@
 import { useEffect, MutableRefObject } from "react";
 
+// TODO: add escape to clickaway listener
+// TODO: add focus to clickaway listener
+
 export function useClickAwayListener(
   innerElementRef: MutableRefObject<HTMLElement | null>,
   onOutsideClick: () => void
