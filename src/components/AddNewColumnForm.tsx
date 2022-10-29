@@ -6,6 +6,7 @@ import { BoardColumn } from "../model/BoardColumn";
 import { API } from "./API";
 import { boardContext } from "../context/BoardContext";
 import { useClickAwayListener } from "../hooks/useClickAwayListener";
+import { Add } from "./icons/Add";
 
 interface Props {
   onNewBoardColumn: (createdBoardColumn: BoardColumn) => void;
@@ -42,9 +43,10 @@ export const AddNewColumnForm = (props: Props) => {
   }
 
   return (
-    <>
+    <div className="text-sm">
       {isAddingNewColumn ? (
         <form
+          className="flex w-56 flex-col gap-2 rounded-lg bg-lines-light py-2 px-4"
           ref={formRef}
           onSubmit={handleSubmit}
           onKeyDown={(event) => {
@@ -57,10 +59,17 @@ export const AddNewColumnForm = (props: Props) => {
             value={columnName}
             onChange={(event) => setColumnName(event.target.value)}
             autoFocus
+            className="rounded-lg"
+            placeholder="Enter column name"
           />
 
-          <div className="flex">
-            <button type="submit">Add New Column</button>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              className="rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary"
+            >
+              Add New Column
+            </button>
             <button type="reset" onClick={() => setIsAddingNewColumn(false)}>
               <Close />
             </button>
@@ -71,10 +80,12 @@ export const AddNewColumnForm = (props: Props) => {
           onClick={() => {
             setIsAddingNewColumn(true);
           }}
+          className="flex w-56 max-w-xs items-center gap-2 rounded-lg bg-lines-light px-4 py-2 text-medium-grey hover:text-primary focus:outline-2 focus:outline-primary"
         >
-          Add new Column
+          <Add />
+          <p> Add New Column</p>
         </button>
       )}
-    </>
+    </div>
   );
 };
