@@ -14,6 +14,7 @@ interface Props {
   onClose: () => void;
   variant: "create" | "edit";
   selectedBoard: Board | null;
+  onDeleteBoard: () => void;
 }
 
 type Inputs = {
@@ -25,6 +26,7 @@ export const BoardDialog = ({
   onClose,
   variant,
   selectedBoard,
+  onDeleteBoard,
 }: Props) => {
   const { createBoard, updateBoard } = useContext(boardContext);
   const {
@@ -103,6 +105,15 @@ export const BoardDialog = ({
                   variant === "create" ? "Create New Board" : "Save Changes"
                 }
               />
+              {variant === "edit" && (
+                <Button
+                  text="Delete Board"
+                  type="button" // prevent submit event of board dialog
+                  variant="secondary"
+                  size="small"
+                  onClick={onDeleteBoard}
+                />
+              )}
             </div>
           </form>
         </Dialog.Panel>
