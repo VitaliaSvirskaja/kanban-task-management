@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { ShowSidebar } from "./components/icons/ShowSidebar";
 import { BoardDialog } from "./components/BoardDialog";
 import { Board } from "./model/Board";
 import { BoardContent } from "./components/BoardContent";
+import { boardContext } from "./context/BoardContext";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -14,6 +15,7 @@ export const App = () => {
     "create"
   );
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
+  const { deleteBoard } = useContext(boardContext);
 
   function handleCreateNewBoard() {
     setDialogVariant("create");
@@ -25,6 +27,14 @@ export const App = () => {
     setDialogVariant("edit");
     setIsBoardDialogOpen(true);
     setSelectedBoard(board);
+  }
+
+  async function handleDeleteBoard() {
+    if (selectedBoard?.id === undefined) {
+      return;
+    }
+    await deleteBoard(selectedBoard?.id);
+    setIsBoardDialogOpen(false);
   }
 
   return (
@@ -59,6 +69,7 @@ export const App = () => {
             setIsBoardDialogOpen(false);
           }}
           selectedBoard={selectedBoard}
+          onDeleteBoard={handleDeleteBoard}
         />
       </div>
     </div>
