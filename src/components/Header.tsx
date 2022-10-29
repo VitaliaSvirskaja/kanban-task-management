@@ -8,12 +8,12 @@ export const Header = () => {
   const { isThemeDark } = useThemeContext();
 
   return (
-    <header className="flex h-28">
-      <div className="flex w-80 items-center border-r border-r-lines-light pl-8">
+    <header className="flex h-28 dark:bg-dark-grey">
+      <div className="flex w-80 items-center border-r border-r-lines-light pl-8 dark:border-r-lines-dark">
         <img src={isThemeDark ? logoLight : logoDark} alt="" />
       </div>
       <div className="flex flex-1 items-center justify-between px-8">
-        <p className="heading-xl">{activeBoardName}</p>
+        <p className="heading-xl dark:text-white">{activeBoardName}</p>
       </div>
     </header>
   );
