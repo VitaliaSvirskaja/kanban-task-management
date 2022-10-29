@@ -4,6 +4,7 @@ import { boardContext } from "../context/BoardContext";
 import { BoardColumn } from "../model/BoardColumn";
 import { API } from "./API";
 import { AddNewColumnForm } from "./AddNewColumnForm";
+import { BoardColumnComponent } from "./BoardColumnComponent";
 
 export const BoardContent = () => {
   const { activeBoard } = useContext(boardContext);
@@ -26,10 +27,11 @@ export const BoardContent = () => {
   }
 
   return (
-    <div className="flex gap-4">
-      {boardColumns.map((boardColumn) => {
-        return <div key={boardColumn.id}>{boardColumn.title}</div>;
-      })}
+    <div className="flex justify-items-start gap-6 p-8">
+      {boardColumns.map((boardColumn) => (
+        <BoardColumnComponent key={boardColumn.id} boardColumn={boardColumn} />
+      ))}
+
       <AddNewColumnForm onNewBoardColumn={handleNewBoardColumn} />
     </div>
   );
