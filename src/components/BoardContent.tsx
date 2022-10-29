@@ -5,9 +5,14 @@ import { BoardColumn } from "../model/BoardColumn";
 import { API } from "./API";
 import { AddNewColumnForm } from "./AddNewColumnForm";
 import { BoardColumnComponent } from "./BoardColumnComponent";
+import { NoExistingBoards } from "./NoExistingBoards";
 
-export const BoardContent = () => {
-  const { activeBoard } = useContext(boardContext);
+interface Props {
+  onAddNewBoard: () => void;
+}
+
+export const BoardContent = ({ onAddNewBoard }: Props) => {
+  const { activeBoard, boards } = useContext(boardContext);
   const [boardColumns, setBoardColumns] = useState<Array<BoardColumn>>([]);
 
   useEffect(() => {
@@ -24,6 +29,10 @@ export const BoardContent = () => {
 
   function handleNewBoardColumn(createdBoardColumn: BoardColumn) {
     setBoardColumns([...boardColumns, createdBoardColumn]);
+  }
+
+  if (boards.length === 0) {
+    return <NoExistingBoards onAddNewBoard={onAddNewBoard} />;
   }
 
   return (

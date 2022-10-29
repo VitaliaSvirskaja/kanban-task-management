@@ -52,7 +52,7 @@ export const App = () => {
           >
             <ShowSidebar />
           </button>
-          <BoardContent />
+          <BoardContent onAddNewBoard={handleCreateNewBoard} />
         </main>
         <Sidebar
           isSidebarVisible={isSidebarVisible}
