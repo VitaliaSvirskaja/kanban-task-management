@@ -40,7 +40,7 @@ export const Sidebar = ({
               text={board.title}
               className={`${
                 activeBoard === board.id
-                  ? "bg-primary text-white hover:bg-primary focus:outline-2 focus:outline-primary-light"
+                  ? "bg-primary text-white hover:text-primary focus:outline-2 focus:outline-primary-light"
                   : "text-medium-grey hover:text-primary "
               }`}
               onClick={() => selectBoard(board.id)}
