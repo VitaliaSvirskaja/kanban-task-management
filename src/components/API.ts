@@ -127,7 +127,7 @@ async function getTasks(boardID: number): Promise<Array<Task>> {
 async function updateTask(
   taskID: number,
   updateTaskDto: UpdateTaskDto
-): Promise<Board> {
+): Promise<Task> {
   try {
     const response = await fetch(`${BASE_URL}/tasks/${taskID}`, {
       method: "PUT",
@@ -174,7 +174,7 @@ async function createSubTask(
 async function updateSubTask(
   subTaskID: number,
   updateSubTaskDto: UpdateSubTaskDto
-): Promise<Board> {
+): Promise<SubTask> {
   try {
     const response = await fetch(`${BASE_URL}/subtasks/${subTaskID}`, {
       method: "PUT",
