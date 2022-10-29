@@ -190,6 +190,28 @@ async function updateSubTask(
   }
 }
 
+async function deleteSubTask(subtaskID: number): Promise<void> {
+  try {
+    await fetch(`${BASE_URL}/subtasks/${subtaskID}`, {
+      method: "DELETE",
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("Error while deleting a subtask.");
+  }
+}
+
+async function deleteTask(taskID: number): Promise<void> {
+  try {
+    await fetch(`${BASE_URL}/tasks/${taskID}`, {
+      method: "DELETE",
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("Error while deleting a task.");
+  }
+}
+
 export const API = {
   createBoard: createBoard,
   deleteBoard: deleteBoard,
@@ -203,4 +225,6 @@ export const API = {
   getSubTasks: getSubTasks,
   createSubTask: createSubTask,
   updateSubTask: updateSubTask,
+  deleteTask: deleteTask,
+  deleteSubTask: deleteSubTask,
 };
