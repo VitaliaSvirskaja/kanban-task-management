@@ -54,7 +54,10 @@ export const App = () => {
           key={selectedBoard?.id}
           variant={dialogVariant}
           isOpen={isBoardDialogOpen}
-          onClose={() => setIsBoardDialogOpen(false)}
+          onClose={() => {
+            setSelectedBoard(null);
+            setIsBoardDialogOpen(false);
+          }}
           selectedBoard={selectedBoard}
         />
       </div>
