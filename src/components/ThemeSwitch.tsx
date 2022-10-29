@@ -7,7 +7,7 @@ export const ThemeSwitch = () => {
   const { isThemeDark, toggleTheme } = useThemeContext();
 
   return (
-    <div className="ml-6 flex items-center justify-center gap-6 rounded-lg bg-light-grey py-4">
+    <div className="ml-6 flex items-center justify-center gap-6 rounded-lg bg-light-grey py-4 dark:bg-very-dark-grey">
       <LightTheme />
       <Switch
         checked={isThemeDark}

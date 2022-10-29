@@ -25,7 +25,7 @@ export const Sidebar = ({
 
   return (
     <aside
-      className={`absolute top-0 left-0 z-30 flex h-full w-80 flex-col border-r border-r-lines-light bg-white pr-6 transition-transform ${
+      className={`absolute top-0 left-0 z-30 flex h-full w-80 flex-col border-r border-r-lines-light bg-white pr-6 transition-transform dark:bg-dark-grey ${
         isSidebarVisible ? "" : "-translate-x-full"
       }`}
     >
@@ -40,8 +40,8 @@ export const Sidebar = ({
               text={board.title}
               className={`${
                 activeBoard === board.id
-                  ? "bg-primary text-white hover:text-primary focus:outline-2 focus:outline-primary-light"
-                  : "text-medium-grey hover:text-primary "
+                  ? "bg-primary text-white hover:text-primary focus:outline-2 focus:outline-primary-light dark:hover:bg-primary-light dark:hover:text-dark-grey"
+                  : "text-medium-grey hover:text-primary dark:hover:text-primary-light"
               }`}
               onClick={() => selectBoard(board.id)}
               secondaryActionIcon={<Edit />}
@@ -52,16 +52,16 @@ export const Sidebar = ({
           <ListElement
             icon={<Add />}
             text="Create New Board"
-            className="text-primary"
+            className="text-primary dark:text-primary-light"
             onClick={onCreateNewBoard}
           />
         </div>
-        <div>
+        <div className="flex flex-col gap-2">
           <ThemeSwitch />
           <ListElement
             icon={<HideSidebar />}
             text="Hide Sidebar"
-            className="mb-6 text-medium-grey hover:text-primary"
+            className="mb-6 text-medium-grey hover:text-primary dark:hover:text-primary-light"
             onClick={onClose}
           />
         </div>
