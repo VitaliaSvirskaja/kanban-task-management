@@ -12,7 +12,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         {label}
       </label>
       <input
-        placeholder="e.g. Web Design"
         ref={ref}
         {...inputProps}
         className={`rounded border border-2 border-medium-grey/25 py-2 px-3 text-black outline-0 hover:border-primary focus:border-primary ${
