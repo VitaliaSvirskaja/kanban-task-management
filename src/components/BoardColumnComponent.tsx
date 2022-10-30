@@ -50,7 +50,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
       <div className="flex h-fit flex-col gap-3">
         {tasks.map((task) => (
           <button
-            className="heading-m w-full rounded-lg bg-white py-6 px-4 text-left shadow hover:text-primary focus:outline-2 focus:outline-primary"
+            className="heading-m w-full rounded-lg bg-white py-6 px-4 text-left shadow hover:text-primary focus:outline-2 focus:outline-primary dark:text-white"
             key={task.id}
             onClick={() => {
               setIsTaskDialogOpen(true);

@@ -105,13 +105,15 @@ export const TaskDialog = ({
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         <Dialog.Panel className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded bg-white p-8">
           <div className="flex items-center justify-between">
-            <Dialog.Title className="heading-l">Edit Task</Dialog.Title>
+            <Dialog.Title className="heading-l dark:text-white">
+              Edit Task
+            </Dialog.Title>
             <Close onClick={onClose} />
           </div>
           <form
             autoComplete="off"
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-start gap-3"
+            className="flex flex-col items-start gap-3 dark:text-white"
           >
             <Input
               label="Title"
