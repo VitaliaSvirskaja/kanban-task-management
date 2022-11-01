@@ -61,6 +61,14 @@ export const BoardContent = ({ onAddNewBoard }: Props) => {
     setBoardColumns(updatedBoardColumns);
   }
 
+  async function handleDeleteBoardColumn(boardColumnID: number) {
+    await API.deleteColumn(boardColumnID);
+    const updatedBoardColumns = boardColumns.filter(
+      (boardColumn) => boardColumn.id !== boardColumnID
+    );
+    setBoardColumns(updatedBoardColumns);
+  }
+
   return (
     <div className="flex justify-items-start gap-6 p-8 dark:bg-very-dark-grey">
       {boardColumns.map((boardColumn) => (
@@ -72,6 +80,9 @@ export const BoardContent = ({ onAddNewBoard }: Props) => {
               boardColumn.id,
               updatedBoardColumnTitle
             );
+          }}
+          onDelete={() => {
+            handleDeleteBoardColumn(boardColumn.id);
           }}
         />
       ))}

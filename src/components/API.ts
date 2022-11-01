@@ -118,6 +118,17 @@ async function updateColumn(
   }
 }
 
+async function deleteColumn(boardColumnID: number): Promise<void> {
+  try {
+    await fetch(`${BASE_URL}/board-columns/${boardColumnID}`, {
+      method: "DELETE",
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("Error while deleting a board column.");
+  }
+}
+
 async function createTask(createTaskDto: CreateTaskDto): Promise<Task> {
   try {
     const response = await fetch(`${BASE_URL}/tasks`, {
@@ -239,6 +250,7 @@ export const API = {
   updateBoard: updateBoard,
   getColumns: getColumns,
   createColumn: createColumn,
+  deleteColumn: deleteColumn,
   updateColumn: updateColumn,
   createTask: createTask,
   getTasks: getTasks,

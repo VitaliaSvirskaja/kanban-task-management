@@ -5,13 +5,19 @@ import { BoardColumn } from "../model/BoardColumn";
 import { API } from "./API";
 import { AddNewTaskForm } from "./AddNewTaskForm";
 import { Input } from "./Input";
+import { Delete } from "./icons/Delete";
 
 interface Props {
   boardColumn: BoardColumn;
   onTitleUpdate: (updatedBoardColumnTitle: string) => void;
+  onDelete: () => void;
 }
 
-export const BoardColumnComponent = ({ boardColumn, onTitleUpdate }: Props) => {
+export const BoardColumnComponent = ({
+  boardColumn,
+  onTitleUpdate,
+  onDelete,
+}: Props) => {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<Task | null>(null);
@@ -70,10 +76,12 @@ export const BoardColumnComponent = ({ boardColumn, onTitleUpdate }: Props) => {
           }}
         />
       ) : (
-        <div
-          className="heading-s h-10 overflow-hidden text-ellipsis py-3 px-1"
+        <BoardColumnTitle
+          title={boardColumn.title}
+          taskCount={tasks.length}
           onClick={() => setIsEditingBoardColumnTitle(true)}
-        >{`${boardColumn.title.toUpperCase()} (${tasks.length})`}</div>
+          onDelete={onDelete}
+        />
       )}
 
       <div className="flex h-fit flex-col gap-3">
@@ -105,6 +113,40 @@ export const BoardColumnComponent = ({ boardColumn, onTitleUpdate }: Props) => {
           initialTaskValue={taskToBeUpdated}
           onDeleteTask={() => handleDeleteTask(taskToBeUpdated.id)}
         />
+      )}
+    </div>
+  );
+};
+
+interface BoardColumnTitleProps {
+  title: string;
+  taskCount: number;
+  onClick: () => void;
+  onDelete: () => void;
+}
+
+const BoardColumnTitle = ({
+  title,
+  taskCount,
+  onClick,
+  onDelete,
+}: BoardColumnTitleProps) => {
+  const [isHovering, setIsHovering] = useState(false);
+
+  return (
+    <div
+      className="flex items-center gap-4 pr-2 text-medium-grey"
+      onMouseOver={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      <div
+        className="heading-s h-10 flex-1 cursor-pointer overflow-hidden text-ellipsis py-3 px-1"
+        onClick={onClick}
+      >{`${title.toUpperCase()} (${taskCount})`}</div>
+      {isHovering && (
+        <button onClick={onDelete}>
+          <Delete />
+        </button>
       )}
     </div>
   );
