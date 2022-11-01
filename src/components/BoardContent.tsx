@@ -36,7 +36,7 @@ export const BoardContent = ({ onAddNewBoard }: Props) => {
   }
 
   return (
-    <div className="flex justify-items-start gap-6 p-8">
+    <div className="flex justify-items-start gap-6 p-8 dark:bg-very-dark-grey">
       {boardColumns.map((boardColumn) => (
         <BoardColumnComponent key={boardColumn.id} boardColumn={boardColumn} />
       ))}
