@@ -39,7 +39,7 @@ export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
       {idAddingNewSubTask ? (
         <div
           ref={formRef}
-          className="flex flex-col gap-2 rounded-lg bg-lines-light py-2 px-4"
+          className="flex w-full flex-col gap-2 rounded-lg bg-lines-light py-2  dark:bg-dark-grey"
         >
           <Input
             value={subTask}
@@ -54,7 +54,7 @@ export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
               }
             }}
           />
-          <div className="flex gap-2">
+          <div className="flex justify-between gap-2">
             <Button
               size="small"
               variant="secondary"
@@ -76,7 +76,7 @@ export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
           text="Add New Subtask"
           icon={<Add />}
           type="button" // prevent submit event of task dialog
-          className="flex items-center"
+          className="flex w-full items-center"
           onClick={() => setIsAddingNewSubTask(true)}
         />
       )}

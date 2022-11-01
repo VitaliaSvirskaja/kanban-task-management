@@ -8,9 +8,15 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, Props>(
   ({ error, label, ...inputProps }, ref) => (
     <div className="flex w-full flex-col gap-1">
-      <label htmlFor={inputProps.name} className="body-m text-medium-grey">
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={inputProps.name}
+          className="body-m text-medium-grey dark:text-medium-grey"
+        >
+          {label}
+        </label>
+      )}
+
       <input
         ref={ref}
         {...inputProps}
@@ -18,7 +24,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           error === undefined ? "focus:border-primary" : "border-red"
         }`}
       />
-      <span className="pl-1 text-xs text-red">{error}</span>
+      {error && <span className="pl-1 text-xs text-red">{error}</span>}
     </div>
   )
 );
