@@ -4,15 +4,23 @@ import { TaskDialog } from "./TaskDialog";
 import { BoardColumn } from "../model/BoardColumn";
 import { API } from "./API";
 import { AddNewTaskForm } from "./AddNewTaskForm";
+import { Input } from "./Input";
 
 interface Props {
   boardColumn: BoardColumn;
+  onTitleUpdate: (updatedBoardColumnTitle: string) => void;
 }
 
-export const BoardColumnComponent = ({ boardColumn }: Props) => {
+export const BoardColumnComponent = ({ boardColumn, onTitleUpdate }: Props) => {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<Task | null>(null);
+
+  const [isEditingBoardColumnTitle, setIsEditingBoardColumnTitle] =
+    useState(false);
+  const [editedBoardColumnTitle, setEditedBoardColumnTitle] = useState(
+    boardColumn.title
+  );
 
   useEffect(() => {
     async function fetchTasks() {
@@ -44,9 +52,30 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
 
   return (
     <div className="flex w-full max-w-[250px] flex-col gap-3">
-      <div className="heading-s overflow-hidden text-ellipsis py-3 px-1">{`${boardColumn.title.toUpperCase()} (${
-        tasks.length
-      })`}</div>
+      {isEditingBoardColumnTitle ? (
+        <Input
+          autoFocus
+          value={editedBoardColumnTitle}
+          className="box-border h-10"
+          onChange={(event) => setEditedBoardColumnTitle(event.target.value)}
+          onBlur={() => {
+            onTitleUpdate(editedBoardColumnTitle);
+            setIsEditingBoardColumnTitle(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              onTitleUpdate(editedBoardColumnTitle);
+              setIsEditingBoardColumnTitle(false);
+            }
+          }}
+        />
+      ) : (
+        <div
+          className="heading-s h-10 overflow-hidden text-ellipsis py-3 px-1"
+          onClick={() => setIsEditingBoardColumnTitle(true)}
+        >{`${boardColumn.title.toUpperCase()} (${tasks.length})`}</div>
+      )}
+
       <div className="flex h-fit flex-col gap-3">
         {tasks.map((task) => (
           <button

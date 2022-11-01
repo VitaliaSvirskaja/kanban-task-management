@@ -9,6 +9,7 @@ import { UpdateTaskDto } from "../model/UpdateTaskDto";
 import { SubTask } from "../model/SubTask";
 import { CreateSubTaskDto } from "../model/CreateSubTaskDto";
 import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
+import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
 
 const BASE_URL = "http://localhost:8080";
 
@@ -95,6 +96,25 @@ async function createColumn(
   } catch (error) {
     console.error(error);
     throw new Error("Error while creating a new board column.");
+  }
+}
+
+async function updateColumn(
+  boardColumnID: number,
+  updateColumnDto: UpdateBoardColumnDto
+): Promise<BoardColumn> {
+  try {
+    const response = await fetch(`${BASE_URL}/board-columns/${boardColumnID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateColumnDto),
+    });
+    return await response.json();
+  } catch (e) {
+    console.error(e);
+    throw new Error("Error while updating a board column.");
   }
 }
 
@@ -219,6 +239,7 @@ export const API = {
   updateBoard: updateBoard,
   getColumns: getColumns,
   createColumn: createColumn,
+  updateColumn: updateColumn,
   createTask: createTask,
   getTasks: getTasks,
   updateTask: updateTask,
