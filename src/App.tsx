@@ -42,7 +42,7 @@ export const App = () => {
       <Header />
       <div className="relative flex h-full">
         <main
-          className={`relative z-0 w-full bg-light-grey transition-spacing ${
+          className={`relative z-0 w-full bg-light-grey transition-spacing dark:bg-very-dark-grey ${
             isSidebarVisible ? "pl-80" : ""
           }`}
         >

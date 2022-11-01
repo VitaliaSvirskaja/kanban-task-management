@@ -41,7 +41,7 @@ export const AddNewTaskForm = ({ boardColumnId, onNewTask }: Props) => {
       {isAddingNewTask ? (
         <form
           ref={formRef}
-          className="flex flex-col gap-2 rounded-lg bg-lines-light py-2 px-4"
+          className="flex flex-col gap-2 rounded-lg bg-lines-light py-2 px-4 dark:bg-dark-grey"
           onSubmit={handleSubmit}
         >
           <Input
@@ -53,7 +53,7 @@ export const AddNewTaskForm = ({ boardColumnId, onNewTask }: Props) => {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="body-l rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary"
+              className="body-l rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary dark:bg-primary dark:hover:bg-primary-light dark:hover:text-dark-grey"
             >
               Add New Task
             </button>

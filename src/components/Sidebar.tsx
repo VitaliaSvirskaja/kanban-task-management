@@ -25,7 +25,7 @@ export const Sidebar = ({
 
   return (
     <aside
-      className={`absolute top-0 left-0 z-30 flex h-full w-80 flex-col border-r border-r-lines-light bg-white pr-6 transition-transform dark:bg-dark-grey ${
+      className={`absolute top-0 left-0 z-30 flex h-full w-80 flex-col border-r border-r-lines-light bg-white pr-6 transition-transform dark:border-r-lines-dark dark:bg-dark-grey ${
         isSidebarVisible ? "" : "-translate-x-full"
       }`}
     >

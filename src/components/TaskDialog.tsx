@@ -103,7 +103,7 @@ export const TaskDialog = ({
       />
       {/* Full screen container to center the dialog panel*/}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <Dialog.Panel className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded bg-white p-8">
+        <Dialog.Panel className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded bg-white p-8 dark:bg-dark-grey">
           <div className="flex items-center justify-between">
             <Dialog.Title className="heading-l dark:text-white">
               Edit Task
@@ -134,7 +134,7 @@ export const TaskDialog = ({
               Description
             </label>
             <textarea
-              className={`w-full rounded border border-2 border-medium-grey/25 py-2 px-3 text-black outline-0 hover:border-primary focus:border-primary`}
+              className={`w-full rounded border border-2 border-medium-grey/25 py-2 px-3 text-black outline-0 hover:border-primary focus:border-primary dark:bg-dark-grey`}
               {...register("description")}
             />
             {subTasks.map((subTask) => (

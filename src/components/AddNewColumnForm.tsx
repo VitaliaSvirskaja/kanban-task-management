@@ -46,7 +46,7 @@ export const AddNewColumnForm = (props: Props) => {
     <div className="text-sm">
       {isAddingNewColumn ? (
         <form
-          className="flex w-56 flex-col gap-2 rounded-lg bg-lines-light py-2 px-4"
+          className="flex w-56 flex-col gap-2 rounded-lg bg-lines-light py-2 px-4 dark:bg-dark-grey"
           ref={formRef}
           onSubmit={handleSubmit}
           onKeyDown={(event) => {
@@ -66,7 +66,7 @@ export const AddNewColumnForm = (props: Props) => {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary"
+              className="rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary dark:bg-primary dark:hover:bg-primary-light dark:hover:text-dark-grey"
             >
               Add New Column
             </button>
@@ -80,7 +80,7 @@ export const AddNewColumnForm = (props: Props) => {
           onClick={() => {
             setIsAddingNewColumn(true);
           }}
-          className="flex w-56 max-w-xs items-center gap-2 rounded-lg bg-lines-light px-4 py-2 text-medium-grey hover:text-primary focus:outline-2 focus:outline-primary"
+          className="flex w-56 max-w-xs items-center gap-2 rounded-lg bg-lines-light px-4 py-2 text-medium-grey hover:text-primary focus:outline-2 focus:outline-primary dark:bg-primary dark:text-white dark:hover:bg-primary-light dark:hover:text-dark-grey"
         >
           <Add />
           <p> Add New Column</p>

@@ -70,9 +70,9 @@ export const BoardDialog = ({
       />
       {/* Full screen container to center the dialog panel*/}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <Dialog.Panel className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded bg-white p-8">
+        <Dialog.Panel className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded bg-white p-8 dark:bg-dark-grey">
           <div className="flex items-center justify-between">
-            <Dialog.Title className="heading-l">
+            <Dialog.Title className="heading-l dark:text-white">
               {variant === "create" ? "Add New Board" : "Edit Board"}
             </Dialog.Title>
             <Close onClick={onClose} />

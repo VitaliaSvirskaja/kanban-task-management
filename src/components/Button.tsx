@@ -18,9 +18,9 @@ export const Button = ({
   <button
     className={`heading-m flex items-center justify-center gap-2 rounded-full px-6 transition-colors  focus:outline-2 focus:outline-primary disabled:opacity-40 ${
       variant === "primary"
-        ? "bg-primary text-white hover:enabled:bg-primary-light"
+        ? "bg-primary text-white hover:enabled:bg-primary-light dark:hover:bg-primary-light dark:hover:text-dark-grey"
         : variant === "secondary"
-        ? "bg-primary bg-opacity-10 text-primary hover:enabled:bg-opacity-25"
+        ? "bg-primary bg-opacity-10 text-primary hover:enabled:bg-opacity-25 dark:bg-opacity-20 dark:text-primary-light dark:hover:bg-opacity-40"
         : variant === "destructive"
         ? "bg-red text-white hover:enabled:bg-red-light"
         : ""
