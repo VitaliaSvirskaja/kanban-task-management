@@ -42,6 +42,7 @@ export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
           className="flex w-full flex-col gap-2 rounded-lg bg-lines-light py-2  dark:bg-dark-grey"
         >
           <Input
+            label="New Subtask"
             value={subTask}
             onChange={(event) => setSubTask(event.target.value)}
             autoFocus
