@@ -6,10 +6,12 @@ import { BoardDialog } from "./components/BoardDialog";
 import { Board } from "./model/Board";
 import { BoardContent } from "./components/BoardContent";
 import { boardContext } from "./context/BoardContext";
+import { ConfirmationDialog } from "./components/ConfirmationDialog";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isBoardDialogOpen, setIsBoardDialogOpen] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   const [dialogVariant, setDialogVariant] = useState<"create" | "edit">(
     "create"
@@ -34,7 +36,7 @@ export const App = () => {
       return;
     }
     await deleteBoard(selectedBoard?.id);
-    setIsBoardDialogOpen(false);
+    setIsConfirmDialogOpen(false);
   }
 
   return (
@@ -69,7 +71,20 @@ export const App = () => {
             setIsBoardDialogOpen(false);
           }}
           selectedBoard={selectedBoard}
-          onDeleteBoard={handleDeleteBoard}
+          onDeleteBoard={() => {
+            setIsConfirmDialogOpen(true);
+            setIsBoardDialogOpen(false);
+          }}
+        />
+        <ConfirmationDialog
+          title="Delete this board?"
+          description={`Are you sure you want to delete the ‘${selectedBoard?.title}’ board? This action will remove all columns and tasks and cannot be reversed.`}
+          open={isConfirmDialogOpen}
+          onClose={() => {
+            setIsConfirmDialogOpen(false);
+            setIsBoardDialogOpen(true);
+          }}
+          onConfirm={handleDeleteBoard}
         />
       </div>
     </div>
