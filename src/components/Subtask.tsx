@@ -14,12 +14,13 @@ interface Props {
 
 export const Subtask = ({ subTask, onUpdate, onDelete }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const [editedSubtaskText, setEditedSubtaskText] = useState(subTask.text);
 
-  async function handleSave() {
+  async function handleSave(checked?: boolean) {
     const updateSubtaskDto: UpdateSubTaskDto = {
       text: editedSubtaskText,
-      done: subTask.done,
+      done: checked ?? subTask.done,
     };
     const updatedSubtask: SubTask = await API.updateSubTask(
       subTask.id,
@@ -48,22 +49,33 @@ export const Subtask = ({ subTask, onUpdate, onDelete }: Props) => {
           <Button
             type="button" // prevent submit event of edit task dialog
             text="Save"
-            onClick={handleSave}
+            onClick={() => handleSave()}
             size="small"
           />
         </div>
       ) : (
         <div
-          className="flex w-full justify-between"
-          onClick={() => setIsEditing(true)}
+          className="flex w-full cursor-pointer items-center gap-4"
+          onMouseOver={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
-          {subTask.text}
-          <button
-            type="button" // prevent submit event of task dialog
-            onClick={onDelete}
-          >
-            <Delete />
-          </button>
+          <input
+            type="checkbox"
+            checked={subTask.done}
+            className="h-5 w-5 cursor-pointer rounded text-primary transition-colors"
+            onChange={(event) => handleSave(event.target.checked)}
+          />
+          <span className="w-full" onClick={() => setIsEditing(true)}>
+            {subTask.text}
+          </span>
+          {isHovering && (
+            <button
+              type="button" // prevent submit event of task dialog
+              onClick={onDelete}
+            >
+              <Delete />
+            </button>
+          )}
         </div>
       )}
     </>
