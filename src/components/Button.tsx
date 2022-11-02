@@ -16,7 +16,7 @@ export const Button = ({
   ...buttonProps
 }: Props) => (
   <button
-    className={`heading-m flex items-center justify-center gap-2 rounded-full px-6 transition-colors  focus:outline-2 focus:outline-primary disabled:opacity-40 ${
+    className={`heading-m flex w-full items-center justify-center gap-2 rounded-full px-6 transition-colors  focus:outline-2 focus:outline-primary disabled:opacity-40 ${
       variant === "primary"
         ? "bg-primary text-white hover:enabled:bg-primary-light dark:hover:bg-primary-light dark:hover:text-dark-grey"
         : variant === "secondary"
