@@ -134,8 +134,9 @@ export const TaskDialog = ({
               Description
             </label>
             <textarea
-              className={`w-full rounded border border-2 border-medium-grey/25 py-2 px-3 text-black outline-0 hover:border-primary focus:border-primary dark:bg-dark-grey`}
+              className="body-l w-full resize-none rounded border border-2 border-medium-grey/25 py-2 px-3 outline-0 hover:border-primary focus:border-primary dark:bg-dark-grey"
               {...register("description")}
+              rows={4}
             />
             {subTasks.map((subTask) => (
               <Subtask
