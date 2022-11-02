@@ -6,6 +6,7 @@ import { API } from "./API";
 import { AddNewTaskForm } from "./AddNewTaskForm";
 import { Input } from "./Input";
 import { Delete } from "./icons/Delete";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 interface Props {
   boardColumn: BoardColumn;
@@ -20,6 +21,7 @@ export const BoardColumnComponent = ({
 }: Props) => {
   const [tasks, setTasks] = useState<Array<Task>>([]);
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<Task | null>(null);
 
   const [isEditingBoardColumnTitle, setIsEditingBoardColumnTitle] =
@@ -54,6 +56,7 @@ export const BoardColumnComponent = ({
     );
     setTasks(updatedTasks);
     setIsTaskDialogOpen(false);
+    setIsConfirmDialogOpen(false);
   }
 
   return (
@@ -101,18 +104,33 @@ export const BoardColumnComponent = ({
         onNewTask={handleNewTask}
       />
       {taskToBeUpdated && (
-        <TaskDialog
-          boardColumnID={boardColumn.id}
-          key={taskToBeUpdated.id}
-          isOpen={isTaskDialogOpen}
-          onClose={() => {
-            setIsTaskDialogOpen(false);
-            setTaskToBeUpdated(null);
-          }}
-          onUpdatedTask={handleUpdatedTask}
-          initialTaskValue={taskToBeUpdated}
-          onDeleteTask={() => handleDeleteTask(taskToBeUpdated.id)}
-        />
+        <>
+          <TaskDialog
+            boardColumnID={boardColumn.id}
+            key={taskToBeUpdated.id}
+            isOpen={isTaskDialogOpen}
+            onClose={() => {
+              setIsTaskDialogOpen(false);
+              setTaskToBeUpdated(null);
+            }}
+            onUpdatedTask={handleUpdatedTask}
+            initialTaskValue={taskToBeUpdated}
+            onDeleteTask={() => {
+              setIsConfirmDialogOpen(true);
+              setIsTaskDialogOpen(false);
+            }}
+          />
+          <ConfirmationDialog
+            title="Delete this task?"
+            description={`Are you sure you want to delete the ‘${taskToBeUpdated.title}’ task and its subtasks? This action cannot be reversed.`}
+            open={isConfirmDialogOpen}
+            onClose={() => {
+              setIsTaskDialogOpen(true);
+              setIsConfirmDialogOpen(false);
+            }}
+            onConfirm={() => handleDeleteTask(taskToBeUpdated.id)}
+          />
+        </>
       )}
     </div>
   );
