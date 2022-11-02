@@ -32,7 +32,7 @@ export const Subtask = ({ subTask, onUpdate, onDelete }: Props) => {
   return (
     <>
       {isEditing ? (
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col gap-2">
           <Input
             label="Edit Subtask"
             type="text"

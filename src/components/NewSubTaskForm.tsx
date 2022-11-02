@@ -39,7 +39,7 @@ export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
       {idAddingNewSubTask ? (
         <div
           ref={formRef}
-          className="flex w-full flex-col gap-2 rounded-lg bg-lines-light py-2  dark:bg-dark-grey"
+          className="flex w-full flex-col gap-2 rounded-lg py-2 dark:bg-dark-grey"
         >
           <Input
             label="New Subtask"
