@@ -7,6 +7,7 @@ import { AddNewTaskForm } from "./AddNewTaskForm";
 import { Input } from "./Input";
 import { Delete } from "./icons/Delete";
 import { ConfirmationDialog } from "./ConfirmationDialog";
+import { TaskComponent } from "./TaskComponent";
 
 interface Props {
   boardColumn: BoardColumn;
@@ -89,14 +90,14 @@ export const BoardColumnComponent = ({
 
       <div className="flex h-fit flex-col gap-3">
         {tasks.map((task) => (
-          <button
-            className="heading-m w-full rounded-lg bg-white py-6 px-4 text-left shadow hover:text-primary focus:outline-2 focus:outline-primary dark:bg-dark-grey dark:text-white"
+          <TaskComponent
             key={task.id}
+            task={task}
             onClick={() => {
               setIsTaskDialogOpen(true);
               setTaskToBeUpdated(task);
             }}
-          >{`${task.title}`}</button>
+          />
         ))}
       </div>
       <AddNewTaskForm
