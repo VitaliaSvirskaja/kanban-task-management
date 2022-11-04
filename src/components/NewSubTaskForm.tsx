@@ -58,16 +58,20 @@ export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
           <div className="flex justify-between gap-2">
             <Button
               size="small"
-              variant="secondary"
+              variant="primary"
               text="Add New Subtask"
               icon={<Add />}
               onClick={handleSubmit}
               type="button" // prevent submit event of task dialog
             />
 
-            <button type="reset" onClick={() => setIsAddingNewSubTask(false)}>
-              <Close />
-            </button>
+            <Button
+              type="reset"
+              text="Cancel"
+              variant="secondary"
+              size="small"
+              onClick={() => setIsAddingNewSubTask(false)}
+            />
           </div>
         </div>
       ) : (
