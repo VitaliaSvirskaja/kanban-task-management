@@ -11,7 +11,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       {label && (
         <label
           htmlFor={inputProps.name}
-          className="body-m text-medium-grey dark:text-medium-grey"
+          className="body-l text-medium-grey dark:text-medium-grey"
         >
           {label}
         </label>
