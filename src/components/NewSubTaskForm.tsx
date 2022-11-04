@@ -1,7 +1,6 @@
 import { Add } from "./icons/Add";
 import { useRef, useState } from "react";
 import { Input } from "./Input";
-import { Close } from "./icons/Close";
 import { useClickAwayListener } from "../hooks/useClickAwayListener";
 import { API } from "./API";
 import { CreateSubTaskDto } from "../model/CreateSubTaskDto";
