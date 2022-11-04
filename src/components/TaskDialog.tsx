@@ -80,7 +80,7 @@ export const TaskDialog = ({
       />
       {/* Full screen container to center the dialog panel*/}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <Dialog.Panel className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded bg-white p-8 dark:bg-dark-grey">
+        <Dialog.Panel className="mx-auto flex max-h-[48rem] w-full max-w-md flex-col gap-6 overflow-y-auto rounded bg-white p-8 dark:bg-dark-grey">
           <div className="flex items-center justify-between">
             <Dialog.Title className="heading-l dark:text-white">
               Edit Task
@@ -90,43 +90,58 @@ export const TaskDialog = ({
           <form
             autoComplete="off"
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-start gap-3 dark:text-white"
+            className="flex flex-col items-start gap-8 dark:text-white"
           >
-            <Input
-              label="Title"
-              type="text"
-              {...register("taskName", {
-                validate: (input: string) => {
-                  if (input === "") {
-                    return "Can't be empty.";
-                  }
-                },
-              })}
-              error={errors.taskName?.message}
-            />
-            <label
-              htmlFor="description"
-              className="body-m text-medium-greybody-m text-medium-grey"
-            >
-              Description
-            </label>
-            <textarea
-              className="body-l w-full resize-none rounded border border-2 border-medium-grey/25 py-2 px-3 outline-0 hover:border-primary focus:border-primary dark:bg-dark-grey"
-              {...register("description")}
-              rows={4}
-            />
-            {subTasks.map((subTask) => (
-              <Subtask
-                key={subTask.id}
-                subTask={subTask}
-                onUpdate={handleUpdateSubtask}
-                onDelete={() => handleDeleteSubtask(subTask.id)}
+            <div className="flex w-full flex-col gap-4">
+              <div>
+                <Input
+                  label="Title"
+                  type="text"
+                  {...register("taskName", {
+                    validate: (input: string) => {
+                      if (input === "") {
+                        return "Can't be empty.";
+                      }
+                    },
+                  })}
+                  error={errors.taskName?.message}
+                />
+              </div>
+              <div className="flex w-full flex-col">
+                <label
+                  htmlFor="description"
+                  className="body-l w-full text-medium-grey"
+                >
+                  Description
+                </label>
+                <textarea
+                  className="body-l  resize-none rounded border border-2 border-medium-grey/25 py-2 px-3 outline-0 hover:border-primary focus:border-primary dark:bg-dark-grey dark:text-white"
+                  {...register("description")}
+                  rows={4}
+                />
+              </div>
+            </div>
+            <div className="flex w-full flex-col gap-3">
+              {subTasks && (
+                <div>
+                  <span className="body-l text-medium-grey">Subtasks</span>
+
+                  {subTasks.map((subTask) => (
+                    <Subtask
+                      key={subTask.id}
+                      subTask={subTask}
+                      onUpdate={handleUpdateSubtask}
+                      onDelete={() => handleDeleteSubtask(subTask.id)}
+                    />
+                  ))}
+                </div>
+              )}
+              <NewSubTaskForm
+                taskId={initialTaskValue.id}
+                onNewSubTask={handleNewSubTask}
               />
-            ))}
-            <NewSubTaskForm
-              taskId={initialTaskValue.id}
-              onNewSubTask={handleNewSubTask}
-            />
+            </div>
+
             <div className=" flex w-full flex-col gap-3">
               {/* TODO: loading indicator while waiting for response */}
               <Button
