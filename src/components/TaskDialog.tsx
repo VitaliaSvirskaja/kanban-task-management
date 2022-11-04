@@ -6,11 +6,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { API } from "./API";
 import { Task } from "../model/Task";
 import { UpdateTaskDto } from "../model/UpdateTaskDto";
-import { useEffect, useState } from "react";
 import { NewSubTaskForm } from "./NewSubTaskForm";
-import { SubTask } from "../model/SubTask";
 import { Delete } from "./icons/Delete";
 import { Subtask } from "./Subtask";
+import { useSubtasks } from "../hooks/useSubtasks";
 
 interface Props {
   boardColumnID: number;
@@ -34,7 +33,12 @@ export const TaskDialog = ({
   initialTaskValue,
   onDeleteTask,
 }: Props) => {
-  const [subTasks, setSubTasks] = useState<Array<SubTask>>([]);
+  const {
+    subTasks,
+    handleNewSubTask,
+    handleUpdateSubtask,
+    handleDeleteSubtask,
+  } = useSubtasks(initialTaskValue.id);
 
   const {
     register,
@@ -48,14 +52,6 @@ export const TaskDialog = ({
       description: initialTaskValue.description,
     },
   });
-
-  useEffect(() => {
-    async function fetchSubTasks() {
-      const fetchedSubTasks = await API.getSubTasks(initialTaskValue.id);
-      setSubTasks(fetchedSubTasks);
-    }
-    fetchSubTasks();
-  }, [initialTaskValue.id]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const updateTaskDto: UpdateTaskDto = {
@@ -74,25 +70,6 @@ export const TaskDialog = ({
     reset();
     onClose();
   };
-
-  function handleNewSubTask(createdSubTask: SubTask) {
-    setSubTasks([...subTasks, createdSubTask]);
-  }
-
-  async function handleDeleteSubtask(subTaskID: number) {
-    await API.deleteSubTask(subTaskID);
-    const updatedSubtasks: Array<SubTask> = subTasks.filter(
-      (subTask) => subTask.id !== subTaskID
-    );
-    setSubTasks(updatedSubtasks);
-  }
-
-  function handleUpdateSubtask(updatedSubtask: SubTask) {
-    const updatedSubtasks: Array<SubTask> = subTasks.map((subTask) =>
-      subTask.id === updatedSubtask.id ? updatedSubtask : subTask
-    );
-    setSubTasks(updatedSubtasks);
-  }
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
