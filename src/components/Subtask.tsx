@@ -2,7 +2,6 @@ import { Delete } from "./icons/Delete";
 import { SubTask } from "../model/SubTask";
 import { useState } from "react";
 import { Input } from "./Input";
-import { Button } from "./Button";
 import { API } from "./API";
 import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
 
@@ -31,14 +30,28 @@ export const Subtask = ({ subTask, onUpdate, onDelete }: Props) => {
   }
 
   return (
-    <>
+    <div
+      className="flex h-11 w-full cursor-pointer items-center gap-4"
+      onMouseOver={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      <input
+        type="checkbox"
+        checked={subTask.done}
+        className="h-4 w-4 cursor-pointer rounded text-primary transition-colors focus:border-none focus:ring-1 focus:ring-primary dark:bg-dark-grey dark:checked:bg-primary"
+        onChange={(event) => handleSave(event.target.checked)}
+      />
       {isEditing ? (
-        <div className="flex w-full flex-col gap-2">
+        <div className="flex h-11 w-full flex-col gap-2">
           <Input
-            label="Edit Subtask"
+            autoFocus
             type="text"
             value={editedSubtaskText}
             onChange={(event) => setEditedSubtaskText(event.target.value)}
+            onBlur={() => {
+              handleSave();
+              setIsEditing(false);
+            }}
             onKeyDown={(event) => {
               if (event.key === "Enter") {
                 event.preventDefault();
@@ -46,38 +59,27 @@ export const Subtask = ({ subTask, onUpdate, onDelete }: Props) => {
               }
             }}
           />
-          <Button
-            type="button" // prevent submit event of edit task dialog
-            text="Save"
-            onClick={() => handleSave()}
-            size="small"
-          />
         </div>
       ) : (
-        <div
-          className="flex w-full cursor-pointer items-center gap-4"
-          onMouseOver={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
+        <span
+          className="w-full dark:text-white"
+          onClick={() => {
+            setIsEditing(true);
+            setIsHovering(false);
+          }}
         >
-          <input
-            type="checkbox"
-            checked={subTask.done}
-            className="h-5 w-5 cursor-pointer rounded text-primary transition-colors"
-            onChange={(event) => handleSave(event.target.checked)}
-          />
-          <span className="w-full" onClick={() => setIsEditing(true)}>
-            {subTask.text}
-          </span>
-          {isHovering && (
-            <button
-              type="button" // prevent submit event of task dialog
-              onClick={onDelete}
-            >
-              <Delete />
-            </button>
-          )}
-        </div>
+          {subTask.text}
+        </span>
       )}
-    </>
+      {(isHovering || isEditing) && (
+        <button
+          type="button" // prevent submit event of task dialog
+          onClick={onDelete}
+          className="text-medium-grey"
+        >
+          <Delete />
+        </button>
+      )}
+    </div>
   );
 };
