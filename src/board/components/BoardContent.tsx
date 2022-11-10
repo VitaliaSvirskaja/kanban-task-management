@@ -1,4 +1,3 @@
-import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { AddNewColumnForm } from "../../boardColumn/components/AddNewColumnForm";
 import { BoardColumnComponent } from "../../boardColumn/components/BoardColumnComponent";
 import { NoExistingBoards } from "./NoExistingBoards";
@@ -10,7 +9,6 @@ interface Props {
 }
 
 export const BoardContent = ({ onAddNewBoard }: Props) => {
-  const { selectedBoardID } = useSelectedBoard();
   const boards = useBoards();
   const boardColumns = useBoardColumns();
 
@@ -21,11 +19,7 @@ export const BoardContent = ({ onAddNewBoard }: Props) => {
   return (
     <div className="flex justify-items-start gap-6 p-8 dark:bg-very-dark-grey">
       {boardColumns.map((boardColumn) => (
-        <BoardColumnComponent
-          key={boardColumn.id}
-          boardColumn={boardColumn}
-          boardID={selectedBoardID}
-        />
+        <BoardColumnComponent key={boardColumn.id} boardColumn={boardColumn} />
       ))}
 
       <AddNewColumnForm />

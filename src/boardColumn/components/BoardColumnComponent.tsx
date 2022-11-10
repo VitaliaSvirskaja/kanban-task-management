@@ -11,13 +11,15 @@ import { TaskComponent } from "../../task/components/TaskComponent";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
 import { useTasks } from "../../task/hooks/useTasks";
+import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
 
 interface Props {
   boardColumn: BoardColumn;
-  boardID: number | null;
 }
 
-export const BoardColumnComponent = ({ boardColumn, boardID }: Props) => {
+export const BoardColumnComponent = ({ boardColumn }: Props) => {
+  const { selectedBoardID } = useSelectedBoard();
+
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<Task | null>(null);
@@ -36,7 +38,7 @@ export const BoardColumnComponent = ({ boardColumn, boardID }: Props) => {
     },
     onSuccess: (updatedBoardColumn) => {
       queryClient.setQueryData(
-        ["boardColumns", boardID],
+        ["boardColumns", selectedBoardID],
         (prevBoardColumns?: Array<BoardColumn>) => {
           return prevBoardColumns?.map((prevBoardColumn) => {
             return prevBoardColumn.id === updatedBoardColumn.id
@@ -49,11 +51,11 @@ export const BoardColumnComponent = ({ boardColumn, boardID }: Props) => {
   });
 
   function updateBoardColumn() {
-    if (boardID === null) {
+    if (selectedBoardID === null) {
       return;
     }
     const updateBoardColumnDto: UpdateBoardColumnDto = {
-      boardId: boardID,
+      boardId: selectedBoardID,
       title: editedBoardColumnTitle,
     };
     updateBoardColumnMutation.mutate(updateBoardColumnDto);
@@ -64,7 +66,7 @@ export const BoardColumnComponent = ({ boardColumn, boardID }: Props) => {
     mutationFn: API.deleteColumn,
     onSuccess: (_data, deletedBoardColumnID) => {
       queryClient.setQueryData(
-        ["boardColumns", boardID],
+        ["boardColumns", selectedBoardID],
         (prevBoardColumns?: Array<BoardColumn>) => {
           return prevBoardColumns?.filter((prevBoardColumn) => {
             return prevBoardColumn.id !== deletedBoardColumnID;
