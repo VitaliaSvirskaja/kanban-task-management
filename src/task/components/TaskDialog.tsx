@@ -3,14 +3,13 @@ import { Close } from "../../components/icons/Close";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { API } from "../../utils/API";
 import { Task } from "../model/Task";
 import { UpdateTaskDto } from "../model/UpdateTaskDto";
 import { NewSubTaskForm } from "../../subtask/components/NewSubTaskForm";
 import { Delete } from "../../components/icons/Delete";
 import { Subtask } from "../../subtask/components/Subtask";
 import { useSubtasks } from "../../subtask/hooks/useSubtasks";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTaskMutations } from "../hooks/useTaskMutations";
 
 interface Props {
   boardColumnID: number;
@@ -47,22 +46,7 @@ export const TaskDialog = ({
     },
   });
 
-  const queryClient = useQueryClient();
-  const updateTaskMutation = useMutation({
-    mutationFn: (updateTaskDto: UpdateTaskDto) => {
-      return API.updateTask(initialTaskValue.id, updateTaskDto);
-    },
-    onSuccess: (updatedTask) => {
-      queryClient.setQueryData(
-        ["tasks", boardColumnID],
-        (prevTasks?: Array<Task>) => {
-          return prevTasks?.map((prevTask) => {
-            return prevTask.id === updatedTask.id ? updatedTask : prevTask;
-          });
-        }
-      );
-    },
-  });
+  const { updateTaskMutation } = useTaskMutations(boardColumnID);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const updateTaskDto: UpdateTaskDto = {
@@ -73,7 +57,10 @@ export const TaskDialog = ({
     if (initialTaskValue?.id === undefined) {
       return;
     }
-    updateTaskMutation.mutate(updateTaskDto);
+    updateTaskMutation.mutate({
+      taskID: initialTaskValue.id,
+      updateTaskDto: updateTaskDto,
+    });
     reset();
     onClose();
   };

@@ -4,9 +4,7 @@ import { Input } from "../../components/Input";
 import { Close } from "../../components/icons/Close";
 import { useClickAwayListener } from "../../hooks/useClickAwayListener";
 import { CreateTaskDto } from "../model/CreateTaskDto";
-import { Task } from "../model/Task";
-import { API } from "../../utils/API";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTaskMutations } from "../hooks/useTaskMutations";
 
 interface Props {
   boardColumnId: number;
@@ -20,16 +18,7 @@ export const AddNewTaskForm = ({ boardColumnId }: Props) => {
 
   useClickAwayListener(formRef, () => setIsAddingNewTask(false));
 
-  const queryClient = useQueryClient();
-  const createNewTaskMutation = useMutation({
-    mutationFn: API.createTask,
-    onSuccess: (newTask) => {
-      queryClient.setQueryData(
-        ["tasks", boardColumnId],
-        (prevTasks?: Array<Task>) => [...(prevTasks ?? []), newTask]
-      );
-    },
-  });
+  const { createNewTaskMutation } = useTaskMutations(boardColumnId);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();

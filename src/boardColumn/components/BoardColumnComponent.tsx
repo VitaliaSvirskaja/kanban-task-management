@@ -2,17 +2,16 @@ import { useState } from "react";
 import { Task } from "../../task/model/Task";
 import { TaskDialog } from "../../task/components/TaskDialog";
 import { BoardColumn } from "../model/BoardColumn";
-import { API } from "../../utils/API";
 import { AddNewTaskForm } from "../../task/components/AddNewTaskForm";
 import { Input } from "../../components/Input";
 import { Delete } from "../../components/icons/Delete";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 import { TaskComponent } from "../../task/components/TaskComponent";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
 import { useTasks } from "../../task/hooks/useTasks";
 import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
 import { useBoardColumnMutations } from "../hooks/useBoardColumnMutations";
+import { useTaskMutations } from "../../task/hooks/useTaskMutations";
 
 interface Props {
   boardColumn: BoardColumn;
@@ -32,10 +31,10 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
     boardColumn.title
   );
 
-  const queryClient = useQueryClient();
-
   const { updateBoardColumnMutation, deleteBoardColumnMutation } =
     useBoardColumnMutations();
+
+  const { deleteTaskMutation } = useTaskMutations(boardColumn.id);
 
   function updateBoardColumn() {
     if (selectedBoardID === null) {
@@ -51,20 +50,6 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
     });
     setIsEditingBoardColumnTitle(false);
   }
-
-  const deleteTaskMutation = useMutation({
-    mutationFn: API.deleteTask,
-    onSuccess: (_data, deletedTaskID) => {
-      queryClient.setQueryData(
-        ["tasks", boardColumn.id],
-        (prevTasks?: Array<Task>) => {
-          return prevTasks?.filter((prevTask) => {
-            return prevTask.id !== deletedTaskID;
-          });
-        }
-      );
-    },
-  });
 
   async function handleDeleteTask(taskID: number) {
     deleteTaskMutation.mutate(taskID);
