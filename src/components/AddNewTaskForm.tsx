@@ -6,18 +6,30 @@ import { useClickAwayListener } from "../hooks/useClickAwayListener";
 import { CreateTaskDto } from "../model/CreateTaskDto";
 import { Task } from "../model/Task";
 import { API } from "./API";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   boardColumnId: number;
-  onNewTask: (createdTask: Task) => void;
 }
 
-export const AddNewTaskForm = ({ boardColumnId, onNewTask }: Props) => {
+// TODO: implement loading indicator
+export const AddNewTaskForm = ({ boardColumnId }: Props) => {
   const [isAddingNewTask, setIsAddingNewTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
   useClickAwayListener(formRef, () => setIsAddingNewTask(false));
+
+  const queryClient = useQueryClient();
+  const createNewTaskMutation = useMutation({
+    mutationFn: API.createTask,
+    onSuccess: (newTask) => {
+      queryClient.setQueryData(
+        ["tasks", boardColumnId],
+        (prevTasks?: Array<Task>) => [...(prevTasks ?? []), newTask]
+      );
+    },
+  });
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -29,9 +41,7 @@ export const AddNewTaskForm = ({ boardColumnId, onNewTask }: Props) => {
       title: taskTitle,
       description: "",
     };
-
-    const createdTask: Task = await API.createTask(createTaskDto);
-    onNewTask(createdTask);
+    await createNewTaskMutation.mutateAsync(createTaskDto);
     setTaskTitle("");
     setIsAddingNewTask(false);
   }

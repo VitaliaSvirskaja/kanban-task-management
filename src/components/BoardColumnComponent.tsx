@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Task } from "../model/Task";
 import { TaskDialog } from "./TaskDialog";
 import { BoardColumn } from "../model/BoardColumn";
@@ -8,22 +8,20 @@ import { Input } from "./Input";
 import { Delete } from "./icons/Delete";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { TaskComponent } from "./TaskComponent";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
+import { useTasks } from "../hooks/useTasks";
 
 interface Props {
   boardColumn: BoardColumn;
-  onTitleUpdate: (updatedBoardColumnTitle: string) => void;
-  onDelete: () => void;
+  boardID: number | null;
 }
 
-export const BoardColumnComponent = ({
-  boardColumn,
-  onTitleUpdate,
-  onDelete,
-}: Props) => {
-  const [tasks, setTasks] = useState<Array<Task>>([]);
+export const BoardColumnComponent = ({ boardColumn, boardID }: Props) => {
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [taskToBeUpdated, setTaskToBeUpdated] = useState<Task | null>(null);
+  const tasks = useTasks(boardColumn.id);
 
   const [isEditingBoardColumnTitle, setIsEditingBoardColumnTitle] =
     useState(false);
@@ -31,31 +29,67 @@ export const BoardColumnComponent = ({
     boardColumn.title
   );
 
-  useEffect(() => {
-    async function fetchTasks() {
-      const fetchedTasks = await API.getTasks(boardColumn.id);
-      setTasks(fetchedTasks);
+  const queryClient = useQueryClient();
+  const updateBoardColumnMutation = useMutation({
+    mutationFn: (updateBoardColumnDto: UpdateBoardColumnDto) => {
+      return API.updateColumn(boardColumn.id, updateBoardColumnDto);
+    },
+    onSuccess: (updatedBoardColumn) => {
+      queryClient.setQueryData(
+        ["boardColumns", boardID],
+        (prevBoardColumns?: Array<BoardColumn>) => {
+          return prevBoardColumns?.map((prevBoardColumn) => {
+            return prevBoardColumn.id === updatedBoardColumn.id
+              ? updatedBoardColumn
+              : prevBoardColumn;
+          });
+        }
+      );
+    },
+  });
+
+  function updateBoardColumn() {
+    if (boardID === null) {
+      return;
     }
-    fetchTasks();
-  }, [boardColumn.id]);
-
-  function handleNewTask(createdTask: Task) {
-    setTasks([...tasks, createdTask]);
+    const updateBoardColumnDto: UpdateBoardColumnDto = {
+      boardId: boardID,
+      title: editedBoardColumnTitle,
+    };
+    updateBoardColumnMutation.mutate(updateBoardColumnDto);
+    setIsEditingBoardColumnTitle(false);
   }
 
-  function handleUpdatedTask(updatedTask: Task) {
-    const updatedTasks: Array<Task> = tasks.map((task) =>
-      task.id === updatedTask.id ? updatedTask : task
-    );
-    setTasks(updatedTasks);
-  }
+  const deleteBoardColumnMutation = useMutation({
+    mutationFn: API.deleteColumn,
+    onSuccess: (_data, deletedBoardColumnID) => {
+      queryClient.setQueryData(
+        ["boardColumns", boardID],
+        (prevBoardColumns?: Array<BoardColumn>) => {
+          return prevBoardColumns?.filter((prevBoardColumn) => {
+            return prevBoardColumn.id !== deletedBoardColumnID;
+          });
+        }
+      );
+    },
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: API.deleteTask,
+    onSuccess: (_data, deletedTaskID) => {
+      queryClient.setQueryData(
+        ["tasks", boardColumn.id],
+        (prevTasks?: Array<Task>) => {
+          return prevTasks?.filter((prevTask) => {
+            return prevTask.id !== deletedTaskID;
+          });
+        }
+      );
+    },
+  });
 
   async function handleDeleteTask(taskID: number) {
-    await API.deleteTask(taskID);
-    const updatedTasks: Array<Task> = tasks.filter(
-      (task) => task.id !== taskID
-    );
-    setTasks(updatedTasks);
+    deleteTaskMutation.mutate(taskID);
     setIsTaskDialogOpen(false);
     setIsConfirmDialogOpen(false);
   }
@@ -68,42 +102,46 @@ export const BoardColumnComponent = ({
           value={editedBoardColumnTitle}
           className="box-border h-10"
           onChange={(event) => setEditedBoardColumnTitle(event.target.value)}
-          onBlur={() => {
-            onTitleUpdate(editedBoardColumnTitle);
-            setIsEditingBoardColumnTitle(false);
-          }}
+          onBlur={updateBoardColumn}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              onTitleUpdate(editedBoardColumnTitle);
-              setIsEditingBoardColumnTitle(false);
+              updateBoardColumn();
             }
           }}
         />
       ) : (
-        <BoardColumnTitle
-          title={boardColumn.title}
-          taskCount={tasks.length}
-          onClick={() => setIsEditingBoardColumnTitle(true)}
-          onDelete={onDelete}
-        />
+        <>
+          {updateBoardColumnMutation.isLoading ||
+          deleteBoardColumnMutation.isLoading ? (
+            <div className="heading-s py-3 px-1 text-medium-grey">
+              Loading...
+            </div>
+          ) : (
+            <BoardColumnTitle
+              title={boardColumn.title}
+              taskCount={tasks.length}
+              onClick={() => setIsEditingBoardColumnTitle(true)}
+              onDelete={() => deleteBoardColumnMutation.mutate(boardColumn.id)}
+            />
+          )}
+        </>
       )}
 
-      <div className="flex h-fit flex-col gap-3">
-        {tasks.map((task) => (
-          <TaskComponent
-            key={task.id}
-            task={task}
-            onClick={() => {
-              setIsTaskDialogOpen(true);
-              setTaskToBeUpdated(task);
-            }}
-          />
-        ))}
-      </div>
-      <AddNewTaskForm
-        boardColumnId={boardColumn.id}
-        onNewTask={handleNewTask}
-      />
+      {tasks.length > 0 && (
+        <div className="flex h-fit flex-col gap-3">
+          {tasks.map((task) => (
+            <TaskComponent
+              key={task.id}
+              task={task}
+              onClick={() => {
+                setIsTaskDialogOpen(true);
+                setTaskToBeUpdated(task);
+              }}
+            />
+          ))}
+        </div>
+      )}
+      <AddNewTaskForm boardColumnId={boardColumn.id} />
       {taskToBeUpdated && (
         <>
           <TaskDialog
@@ -114,7 +152,6 @@ export const BoardColumnComponent = ({
               setIsTaskDialogOpen(false);
               setTaskToBeUpdated(null);
             }}
-            onUpdatedTask={handleUpdatedTask}
             initialTaskValue={taskToBeUpdated}
             onDeleteTask={() => {
               setIsConfirmDialogOpen(true);

@@ -1,93 +1,44 @@
-import { useContext, useEffect, useState } from "react";
-
-import { boardContext } from "../context/BoardContext";
-import { BoardColumn } from "../model/BoardColumn";
+import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { API } from "./API";
 import { AddNewColumnForm } from "./AddNewColumnForm";
 import { BoardColumnComponent } from "./BoardColumnComponent";
 import { NoExistingBoards } from "./NoExistingBoards";
-import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
+import { useQuery } from "@tanstack/react-query";
+import { useBoards } from "../hooks/useBoards";
 
 interface Props {
   onAddNewBoard: () => void;
 }
 
 export const BoardContent = ({ onAddNewBoard }: Props) => {
-  const { activeBoard, boards } = useContext(boardContext);
-  const [boardColumns, setBoardColumns] = useState<Array<BoardColumn>>([]);
+  const { selectedBoardID } = useSelectedBoard();
+  const boards = useBoards();
 
-  useEffect(() => {
-    async function fetchBoardColumns() {
-      if (activeBoard === null) {
-        return;
+  const { data: boardColumns } = useQuery({
+    queryKey: ["boardColumns", selectedBoardID],
+    queryFn: () => {
+      if (selectedBoardID) {
+        return API.getColumns(selectedBoardID);
       }
-      const fetchedBoardColumns = await API.getColumns(activeBoard);
-      setBoardColumns(fetchedBoardColumns);
-    }
-
-    fetchBoardColumns();
-  }, [activeBoard]);
-
-  function handleNewBoardColumn(createdBoardColumn: BoardColumn) {
-    setBoardColumns([...boardColumns, createdBoardColumn]);
-  }
+    },
+    enabled: selectedBoardID !== null,
+  });
 
   if (boards.length === 0) {
     return <NoExistingBoards onAddNewBoard={onAddNewBoard} />;
   }
 
-  async function handleBoardColumnTitleUpdate(
-    boardColumnID: number,
-    updatedBoardColumnTitle: string
-  ) {
-    if (activeBoard === null) {
-      return;
-    }
-    const updateBoardColumnDto: UpdateBoardColumnDto = {
-      boardId: activeBoard,
-      title: updatedBoardColumnTitle,
-    };
-    const updatedBoardColumn = await API.updateColumn(
-      boardColumnID,
-      updateBoardColumnDto
-    );
-    const updatedBoardColumns = boardColumns.map((boardColumn) => {
-      if (boardColumn.id === boardColumnID) {
-        return updatedBoardColumn;
-      } else {
-        return boardColumn;
-      }
-    });
-    setBoardColumns(updatedBoardColumns);
-  }
-
-  async function handleDeleteBoardColumn(boardColumnID: number) {
-    await API.deleteColumn(boardColumnID);
-    const updatedBoardColumns = boardColumns.filter(
-      (boardColumn) => boardColumn.id !== boardColumnID
-    );
-    setBoardColumns(updatedBoardColumns);
-  }
-
   return (
     <div className="flex justify-items-start gap-6 p-8 dark:bg-very-dark-grey">
-      {boardColumns.map((boardColumn) => (
+      {boardColumns?.map((boardColumn) => (
         <BoardColumnComponent
           key={boardColumn.id}
           boardColumn={boardColumn}
-          onTitleUpdate={(updatedBoardColumnTitle) => {
-            handleBoardColumnTitleUpdate(
-              boardColumn.id,
-              updatedBoardColumnTitle
-            );
-          }}
-          onDelete={() => {
-            handleDeleteBoardColumn(boardColumn.id);
-          }}
+          boardID={selectedBoardID}
         />
       ))}
 
-      <AddNewColumnForm onNewBoardColumn={handleNewBoardColumn} />
+      <AddNewColumnForm />
     </div>
   );
 };

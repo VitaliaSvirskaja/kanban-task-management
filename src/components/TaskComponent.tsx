@@ -7,8 +7,7 @@ interface Props {
 }
 
 export const TaskComponent = ({ task, onClick }: Props) => {
-  //  FIXME: revalidate with react query
-  const { subTasks } = useSubtasks(task.id);
+  const subTasks = useSubtasks(task.id);
   const subTaskCount: number = subTasks.length;
   const checkedSubtasks = subTasks.filter((subTask) => {
     return subTask.done;
@@ -21,7 +20,9 @@ export const TaskComponent = ({ task, onClick }: Props) => {
       onClick={onClick}
     >
       <p>{task.title}</p>
-      <p className="body-m text-medium-grey">{`${checkedSubtasksCount}/${subTaskCount} subtasks`}</p>
+      {subTasks.length > 0 && (
+        <p className="body-m text-medium-grey">{`${checkedSubtasksCount}/${subTaskCount} subtasks`}</p>
+      )}
     </button>
   );
 };

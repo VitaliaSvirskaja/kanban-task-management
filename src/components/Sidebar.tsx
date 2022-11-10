@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { boardContext } from "../context/BoardContext";
+import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { Board as BoardIcon } from "./icons/Board";
 import { ListElement } from "./ListElement";
 import { Add } from "./icons/Add";
@@ -7,6 +6,7 @@ import { HideSidebar } from "./icons/HideSidebar";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { Edit } from "./icons/Edit";
 import { Board } from "../model/Board";
+import { useBoards } from "../hooks/useBoards";
 
 interface Props {
   isSidebarVisible: boolean;
@@ -21,7 +21,8 @@ export const Sidebar = ({
   onCreateNewBoard,
   onEditBoard,
 }: Props) => {
-  const { boards, selectBoard, activeBoard } = useContext(boardContext);
+  const { selectBoard, selectedBoardID } = useSelectedBoard();
+  const boards = useBoards();
 
   return (
     <aside
@@ -39,7 +40,7 @@ export const Sidebar = ({
               icon={<BoardIcon />}
               text={board.title}
               className={`${
-                activeBoard === board.id
+                selectedBoardID === board.id
                   ? "bg-primary text-white hover:text-primary focus:outline-2 focus:outline-primary-light dark:hover:bg-primary-light dark:hover:text-dark-grey"
                   : "text-medium-grey hover:text-primary dark:hover:text-primary-light"
               }`}

@@ -10,12 +10,12 @@ import { NewSubTaskForm } from "./NewSubTaskForm";
 import { Delete } from "./icons/Delete";
 import { Subtask } from "./Subtask";
 import { useSubtasks } from "../hooks/useSubtasks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   boardColumnID: number;
   isOpen: boolean;
   onClose: () => void;
-  onUpdatedTask: (updatedTask: Task) => void;
   initialTaskValue: Task;
   onDeleteTask: () => void;
 }
@@ -28,17 +28,11 @@ type Inputs = {
 export const TaskDialog = ({
   isOpen,
   onClose,
-  onUpdatedTask,
   boardColumnID,
   initialTaskValue,
   onDeleteTask,
 }: Props) => {
-  const {
-    subTasks,
-    handleNewSubTask,
-    handleUpdateSubtask,
-    handleDeleteSubtask,
-  } = useSubtasks(initialTaskValue.id);
+  const subTasks = useSubtasks(initialTaskValue.id);
 
   const {
     register,
@@ -53,6 +47,23 @@ export const TaskDialog = ({
     },
   });
 
+  const queryClient = useQueryClient();
+  const updateTaskMutation = useMutation({
+    mutationFn: (updateTaskDto: UpdateTaskDto) => {
+      return API.updateTask(initialTaskValue.id, updateTaskDto);
+    },
+    onSuccess: (updatedTask) => {
+      queryClient.setQueryData(
+        ["tasks", boardColumnID],
+        (prevTasks?: Array<Task>) => {
+          return prevTasks?.map((prevTask) => {
+            return prevTask.id === updatedTask.id ? updatedTask : prevTask;
+          });
+        }
+      );
+    },
+  });
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const updateTaskDto: UpdateTaskDto = {
       boardColumnId: boardColumnID,
@@ -62,11 +73,7 @@ export const TaskDialog = ({
     if (initialTaskValue?.id === undefined) {
       return;
     }
-    const updatedTask: Task = await API.updateTask(
-      initialTaskValue?.id,
-      updateTaskDto
-    );
-    onUpdatedTask(updatedTask);
+    updateTaskMutation.mutate(updateTaskDto);
     reset();
     onClose();
   };
@@ -130,16 +137,12 @@ export const TaskDialog = ({
                     <Subtask
                       key={subTask.id}
                       subTask={subTask}
-                      onUpdate={handleUpdateSubtask}
-                      onDelete={() => handleDeleteSubtask(subTask.id)}
+                      taskID={initialTaskValue.id}
                     />
                   ))}
                 </div>
               )}
-              <NewSubTaskForm
-                taskId={initialTaskValue.id}
-                onNewSubTask={handleNewSubTask}
-              />
+              <NewSubTaskForm taskId={initialTaskValue.id} />
             </div>
 
             <div className=" flex w-full flex-col gap-3">

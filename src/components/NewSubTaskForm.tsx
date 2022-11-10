@@ -6,18 +6,32 @@ import { API } from "./API";
 import { CreateSubTaskDto } from "../model/CreateSubTaskDto";
 import { SubTask } from "../model/SubTask";
 import { Button } from "./Button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   taskId: number;
-  onNewSubTask: (createdSubTask: SubTask) => void;
 }
 
-export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
+export const NewSubTaskForm = ({ taskId }: Props) => {
   const [idAddingNewSubTask, setIsAddingNewSubTask] = useState(false);
   const [subTask, setSubTask] = useState("");
   const formRef = useRef<HTMLDivElement>(null);
 
   useClickAwayListener(formRef, () => setIsAddingNewSubTask(false));
+
+  const queryClient = useQueryClient();
+  const createSubTaskMutation = useMutation({
+    mutationFn: API.createSubTask,
+    onSuccess: (createdSubTask) => {
+      queryClient.setQueryData(
+        ["subTasks", taskId],
+        (prevSubTasks?: Array<SubTask>) => [
+          ...(prevSubTasks ?? []),
+          createdSubTask,
+        ]
+      );
+    },
+  });
 
   async function handleSubmit() {
     if (subTask === "") {
@@ -27,8 +41,7 @@ export const NewSubTaskForm = ({ taskId, onNewSubTask }: Props) => {
       taskId: taskId,
       text: subTask,
     };
-    const createdSubTask: SubTask = await API.createSubTask(createSubTaskDto);
-    onNewSubTask(createdSubTask);
+    createSubTaskMutation.mutate(createSubTaskDto);
     setSubTask("");
     setIsAddingNewSubTask(false);
   }

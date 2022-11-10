@@ -4,28 +4,57 @@ import { useState } from "react";
 import { Input } from "./Input";
 import { API } from "./API";
 import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   subTask: SubTask;
-  onUpdate: (updatedSubtask: SubTask) => void;
-  onDelete: () => void;
+  taskID: number;
 }
 
-export const Subtask = ({ subTask, onUpdate, onDelete }: Props) => {
+export const Subtask = ({ subTask, taskID }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [editedSubtaskText, setEditedSubtaskText] = useState(subTask.text);
+
+  const queryClient = useQueryClient();
+  const deleteSubTaskMutation = useMutation({
+    mutationFn: API.deleteSubTask,
+    onSuccess: (_data, deletedSubTaskID) => {
+      queryClient.setQueryData(
+        ["subTasks", taskID],
+        (prevSubTasks?: Array<SubTask>) => {
+          return prevSubTasks?.filter((prevSubTask) => {
+            return prevSubTask.id !== deletedSubTaskID;
+          });
+        }
+      );
+    },
+  });
+
+  const updateSubTaskMutation = useMutation({
+    mutationFn: (updateSubTaskDto: UpdateSubTaskDto) => {
+      return API.updateSubTask(subTask.id, updateSubTaskDto);
+    },
+    onSuccess: (updatedSubTask) => {
+      queryClient.setQueryData(
+        ["subTasks", taskID],
+        (prevSubtasks?: Array<SubTask>) => {
+          return prevSubtasks?.map((prevSubtak) => {
+            return prevSubtak.id === updatedSubTask.id
+              ? updatedSubTask
+              : prevSubtak;
+          });
+        }
+      );
+    },
+  });
 
   async function handleSave(checked?: boolean) {
     const updateSubtaskDto: UpdateSubTaskDto = {
       text: editedSubtaskText,
       done: checked ?? subTask.done,
     };
-    const updatedSubtask: SubTask = await API.updateSubTask(
-      subTask.id,
-      updateSubtaskDto
-    );
-    onUpdate(updatedSubtask);
+    updateSubTaskMutation.mutate(updateSubtaskDto);
     setIsEditing(false);
   }
 
@@ -74,7 +103,7 @@ export const Subtask = ({ subTask, onUpdate, onDelete }: Props) => {
       {(isHovering || isEditing) && (
         <button
           type="button" // prevent submit event of task dialog
-          onClick={onDelete}
+          onClick={() => deleteSubTaskMutation.mutate(subTask.id)}
           className="text-medium-grey"
         >
           <Delete />

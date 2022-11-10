@@ -1,13 +1,14 @@
-import { useContext } from "react";
 import { Dialog } from "@headlessui/react";
 import { Input } from "./Input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "./Button";
 import { Close } from "./icons/Close";
 import { CreateBoardDto } from "../model/CreateBoardDto";
-import { boardContext } from "../context/BoardContext";
+import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { UpdateBoardDto } from "../model/UpdateBoardDto";
 import { Board } from "../model/Board";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { API } from "./API";
 
 interface Props {
   isOpen: boolean;
@@ -21,6 +22,7 @@ type Inputs = {
   boardName: string;
 };
 
+// TODO: implement loading indicator
 export const BoardDialog = ({
   isOpen,
   onClose,
@@ -28,7 +30,7 @@ export const BoardDialog = ({
   selectedBoard,
   onDeleteBoard,
 }: Props) => {
-  const { createBoard, updateBoard } = useContext(boardContext);
+  const { selectBoard } = useSelectedBoard();
   const {
     register,
     handleSubmit,
@@ -41,19 +43,53 @@ export const BoardDialog = ({
     },
   });
 
+  const queryClient = useQueryClient();
+  const createBoardMutation = useMutation({
+    mutationFn: API.createBoard,
+    onSuccess: (createdBoard) => {
+      queryClient.setQueryData(["boards"], (prevBoards?: Array<Board>) => [
+        ...(prevBoards ?? []),
+        createdBoard,
+      ]);
+      selectBoard(createdBoard.id);
+    },
+  });
+
+  const updateBoardMutation = useMutation({
+    mutationFn: ({
+      selectedBoardID,
+      updateBoardDto,
+    }: {
+      selectedBoardID: number;
+      updateBoardDto: UpdateBoardDto;
+    }) => {
+      return API.updateBoard(selectedBoardID, updateBoardDto);
+    },
+    onSuccess: (updatedBoard: Board) => {
+      queryClient.setQueryData(["boards"], (prevBoards?: Array<Board>) => {
+        return prevBoards?.map((prevBoard) => {
+          return prevBoard.id === updatedBoard.id ? updatedBoard : prevBoard;
+        });
+      });
+    },
+  });
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (variant === "create") {
       const createBoardDto: CreateBoardDto = {
         title: data.boardName,
       };
-      await createBoard(createBoardDto);
+      await createBoardMutation.mutateAsync(createBoardDto);
     }
 
     if (variant === "edit" && selectedBoard !== null) {
       const updateBoardDto: UpdateBoardDto = {
         title: data.boardName,
       };
-      await updateBoard(selectedBoard.id, updateBoardDto);
+      await updateBoardMutation.mutateAsync({
+        selectedBoardID: selectedBoard.id,
+        updateBoardDto: updateBoardDto,
+      });
     }
 
     reset();
@@ -96,7 +132,6 @@ export const BoardDialog = ({
             />
 
             <div className=" flex w-full flex-col gap-3">
-              {/* TODO: loading indicator while waiting for response */}
               <Button
                 type="submit"
                 variant="primary"

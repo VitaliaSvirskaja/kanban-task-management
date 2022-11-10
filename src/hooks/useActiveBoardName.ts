@@ -1,12 +1,12 @@
-import { useContext, useMemo } from "react";
-import { boardContext } from "../context/BoardContext";
+import { useMemo } from "react";
+import { useSelectedBoard } from "../context/SelectedBoardContext";
+import { useBoards } from "./useBoards";
 
 export function useActiveBoardName(): string {
-  const { activeBoard, boards } = useContext(boardContext);
+  const { selectedBoardID } = useSelectedBoard();
+  const boards = useBoards();
   return useMemo<string>(() => {
-    const foundBoard = boards.find((board) => {
-      return board.id === activeBoard;
-    });
+    const foundBoard = boards.find((board) => board.id === selectedBoardID);
     return foundBoard?.title ?? "";
-  }, [activeBoard, boards]);
+  }, [selectedBoardID, boards]);
 }

@@ -1,40 +1,48 @@
 import { Input } from "./Input";
 import { Close } from "./icons/Close";
-import { FormEvent, useContext, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { CreateColumnDto } from "../model/CreateColumnDto";
 import { BoardColumn } from "../model/BoardColumn";
 import { API } from "./API";
-import { boardContext } from "../context/BoardContext";
+import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { useClickAwayListener } from "../hooks/useClickAwayListener";
 import { Add } from "./icons/Add";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface Props {
-  onNewBoardColumn: (createdBoardColumn: BoardColumn) => void;
-}
-
-export const AddNewColumnForm = (props: Props) => {
-  const { activeBoard } = useContext(boardContext);
+export const AddNewColumnForm = () => {
+  const { selectedBoardID } = useSelectedBoard();
   const [columnName, setColumnName] = useState("");
   const [isAddingNewColumn, setIsAddingNewColumn] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  const queryClient = useQueryClient();
+  const createBoardColumnMutation = useMutation({
+    mutationFn: API.createColumn,
+    onSuccess: (createdBoardColumn) => {
+      queryClient.setQueryData(
+        ["boardColumns", selectedBoardID],
+        (prevBoardColumns?: Array<BoardColumn>) => [
+          ...(prevBoardColumns ?? []),
+          createdBoardColumn,
+        ]
+      );
+    },
+  });
+
   useClickAwayListener(formRef, () => setIsAddingNewColumn(false));
 
   async function handleNewColumn() {
-    if (activeBoard === null || columnName === "") {
+    if (selectedBoardID === null || columnName === "") {
       return;
     }
     const createColumnDto: CreateColumnDto = {
-      boardId: activeBoard,
+      boardId: selectedBoardID,
       title: columnName,
     };
-    const createdBoardColumn: BoardColumn = await API.createColumn(
-      createColumnDto
-    );
+    await createBoardColumnMutation.mutateAsync(createColumnDto);
 
-    setIsAddingNewColumn(false);
     setColumnName("");
-    props.onNewBoardColumn(createdBoardColumn);
+    setIsAddingNewColumn(false);
   }
 
   function handleSubmit(event: FormEvent) {
@@ -64,15 +72,24 @@ export const AddNewColumnForm = (props: Props) => {
           />
 
           <div className="flex gap-2">
-            <button
-              type="submit"
-              className="rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary dark:bg-primary dark:hover:bg-primary-light dark:hover:text-dark-grey"
-            >
-              Add New Column
-            </button>
-            <button type="reset" onClick={() => setIsAddingNewColumn(false)}>
-              <Close />
-            </button>
+            {createBoardColumnMutation.isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                <button
+                  type="submit"
+                  className="rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary dark:bg-primary dark:hover:bg-primary-light dark:hover:text-dark-grey"
+                >
+                  Add New Column
+                </button>
+                <button
+                  type="reset"
+                  onClick={() => setIsAddingNewColumn(false)}
+                >
+                  <Close />
+                </button>
+              </>
+            )}
           </div>
         </form>
       ) : (

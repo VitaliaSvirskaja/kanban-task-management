@@ -1,12 +1,14 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { ShowSidebar } from "./components/icons/ShowSidebar";
 import { BoardDialog } from "./components/BoardDialog";
 import { Board } from "./model/Board";
 import { BoardContent } from "./components/BoardContent";
-import { boardContext } from "./context/BoardContext";
+import { useSelectedBoard } from "./context/SelectedBoardContext";
 import { ConfirmationDialog } from "./components/ConfirmationDialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { API } from "./components/API";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -17,7 +19,24 @@ export const App = () => {
     "create"
   );
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
-  const { deleteBoard } = useContext(boardContext);
+  const { selectedBoardID, selectBoard } = useSelectedBoard();
+
+  const queryClient = useQueryClient();
+  const deleteBoardMutation = useMutation({
+    mutationFn: API.deleteBoard,
+    onSuccess: (_data, deletedBoardID) => {
+      queryClient.setQueryData(["boards"], (prevBoards?: Array<Board>) => {
+        const updatedBoards = prevBoards?.filter((prevBoard) => {
+          return prevBoard.id !== deletedBoardID;
+        });
+
+        if (selectedBoardID === deletedBoardID && updatedBoards !== undefined) {
+          selectBoard(updatedBoards[0]?.id ?? null);
+        }
+        return updatedBoards;
+      });
+    },
+  });
 
   function handleCreateNewBoard() {
     setDialogVariant("create");
@@ -35,7 +54,7 @@ export const App = () => {
     if (selectedBoard?.id === undefined) {
       return;
     }
-    await deleteBoard(selectedBoard?.id);
+    deleteBoardMutation.mutate(selectedBoard.id);
     setIsConfirmDialogOpen(false);
   }
 
