@@ -2,9 +2,8 @@ import { Delete } from "../../components/icons/Delete";
 import { SubTask } from "../model/SubTask";
 import { useState } from "react";
 import { Input } from "../../components/Input";
-import { API } from "../../utils/API";
 import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSubtaskMutations } from "../hooks/useSubtaskMutations";
 
 interface Props {
   subTask: SubTask;
@@ -16,45 +15,18 @@ export const Subtask = ({ subTask, taskID }: Props) => {
   const [isHovering, setIsHovering] = useState(false);
   const [editedSubtaskText, setEditedSubtaskText] = useState(subTask.text);
 
-  const queryClient = useQueryClient();
-  const deleteSubTaskMutation = useMutation({
-    mutationFn: API.deleteSubTask,
-    onSuccess: (_data, deletedSubTaskID) => {
-      queryClient.setQueryData(
-        ["subTasks", taskID],
-        (prevSubTasks?: Array<SubTask>) => {
-          return prevSubTasks?.filter((prevSubTask) => {
-            return prevSubTask.id !== deletedSubTaskID;
-          });
-        }
-      );
-    },
-  });
-
-  const updateSubTaskMutation = useMutation({
-    mutationFn: (updateSubTaskDto: UpdateSubTaskDto) => {
-      return API.updateSubTask(subTask.id, updateSubTaskDto);
-    },
-    onSuccess: (updatedSubTask) => {
-      queryClient.setQueryData(
-        ["subTasks", taskID],
-        (prevSubtasks?: Array<SubTask>) => {
-          return prevSubtasks?.map((prevSubtak) => {
-            return prevSubtak.id === updatedSubTask.id
-              ? updatedSubTask
-              : prevSubtak;
-          });
-        }
-      );
-    },
-  });
+  const { updateSubTaskMutation, deleteSubTaskMutation } =
+    useSubtaskMutations(taskID);
 
   async function handleSave(checked?: boolean) {
     const updateSubtaskDto: UpdateSubTaskDto = {
       text: editedSubtaskText,
       done: checked ?? subTask.done,
     };
-    updateSubTaskMutation.mutate(updateSubtaskDto);
+    updateSubTaskMutation.mutate({
+      subtaskID: subTask.id,
+      updateSubtaskDto: updateSubtaskDto,
+    });
     setIsEditing(false);
   }
 

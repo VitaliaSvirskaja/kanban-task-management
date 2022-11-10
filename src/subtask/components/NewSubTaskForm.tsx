@@ -2,11 +2,9 @@ import { Add } from "../../components/icons/Add";
 import { useRef, useState } from "react";
 import { Input } from "../../components/Input";
 import { useClickAwayListener } from "../../hooks/useClickAwayListener";
-import { API } from "../../utils/API";
 import { CreateSubTaskDto } from "../model/CreateSubTaskDto";
-import { SubTask } from "../model/SubTask";
 import { Button } from "../../components/Button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSubtaskMutations } from "../hooks/useSubtaskMutations";
 
 interface Props {
   taskId: number;
@@ -19,19 +17,7 @@ export const NewSubTaskForm = ({ taskId }: Props) => {
 
   useClickAwayListener(formRef, () => setIsAddingNewSubTask(false));
 
-  const queryClient = useQueryClient();
-  const createSubTaskMutation = useMutation({
-    mutationFn: API.createSubTask,
-    onSuccess: (createdSubTask) => {
-      queryClient.setQueryData(
-        ["subTasks", taskId],
-        (prevSubTasks?: Array<SubTask>) => [
-          ...(prevSubTasks ?? []),
-          createdSubTask,
-        ]
-      );
-    },
-  });
+  const { createSubTaskMutation } = useSubtaskMutations(taskId);
 
   async function handleSubmit() {
     if (subTask === "") {
