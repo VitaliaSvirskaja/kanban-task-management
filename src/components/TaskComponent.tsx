@@ -16,14 +16,12 @@ export const TaskComponent = ({ task, onClick }: Props) => {
   const checkedSubtasksCount: number = checkedSubtasks.length;
 
   return (
-    <div>
-      <button
-        className="heading-m w-full rounded-lg bg-white py-6 px-4 text-left shadow hover:text-primary focus:outline-2 focus:outline-primary dark:bg-dark-grey dark:text-white"
-        onClick={onClick}
-      >
-        {`${task.title}`}
-        <p>{`${checkedSubtasksCount}/${subTaskCount} subtasks`}</p>
-      </button>
-    </div>
+    <button
+      className="heading-m flex w-full flex-col gap-1.5 rounded-lg bg-white py-6 px-4 text-left text-black shadow transition-shadow hover:text-primary hover:shadow-md focus:outline-2 focus:outline-primary dark:bg-dark-grey dark:text-white"
+      onClick={onClick}
+    >
+      <p>{task.title}</p>
+      <p className="body-m text-medium-grey">{`${checkedSubtasksCount}/${subTaskCount} subtasks`}</p>
+    </button>
   );
 };
