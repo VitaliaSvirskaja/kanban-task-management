@@ -1,5 +1,5 @@
 import { Task } from "../model/Task";
-import { useSubtasks } from "../hooks/useSubtasks";
+import { useSubtasks } from "../../subtask/hooks/useSubtasks";
 
 interface Props {
   task: Task;

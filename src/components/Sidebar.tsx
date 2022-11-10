@@ -1,12 +1,12 @@
-import { useSelectedBoard } from "../context/SelectedBoardContext";
+import { useSelectedBoard } from "../board/context/SelectedBoardContext";
 import { Board as BoardIcon } from "./icons/Board";
 import { ListElement } from "./ListElement";
 import { Add } from "./icons/Add";
 import { HideSidebar } from "./icons/HideSidebar";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { Edit } from "./icons/Edit";
-import { Board } from "../model/Board";
-import { useBoards } from "../hooks/useBoards";
+import { Board } from "../board/model/Board";
+import { useBoards } from "../board/hooks/useBoards";
 
 interface Props {
   isSidebarVisible: boolean;

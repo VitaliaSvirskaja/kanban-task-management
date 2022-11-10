@@ -1,6 +1,6 @@
 import logoDark from "../assets/logo-dark.svg";
 import logoLight from "../assets/logo-light.svg";
-import { useActiveBoardName } from "../hooks/useActiveBoardName";
+import { useActiveBoardName } from "../board/hooks/useActiveBoardName";
 import { useThemeContext } from "../context/ThemeContext";
 
 export const Header = () => {

@@ -1,11 +1,11 @@
-import { Add } from "./icons/Add";
+import { Add } from "../../components/icons/Add";
 import { FormEvent, useRef, useState } from "react";
-import { Input } from "./Input";
-import { Close } from "./icons/Close";
-import { useClickAwayListener } from "../hooks/useClickAwayListener";
+import { Input } from "../../components/Input";
+import { Close } from "../../components/icons/Close";
+import { useClickAwayListener } from "../../hooks/useClickAwayListener";
 import { CreateTaskDto } from "../model/CreateTaskDto";
 import { Task } from "../model/Task";
-import { API } from "./API";
+import { API } from "../../utils/API";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {

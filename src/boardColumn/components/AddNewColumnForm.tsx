@@ -1,12 +1,12 @@
-import { Input } from "./Input";
-import { Close } from "./icons/Close";
+import { Input } from "../../components/Input";
+import { Close } from "../../components/icons/Close";
 import { FormEvent, useRef, useState } from "react";
 import { CreateColumnDto } from "../model/CreateColumnDto";
 import { BoardColumn } from "../model/BoardColumn";
-import { API } from "./API";
-import { useSelectedBoard } from "../context/SelectedBoardContext";
-import { useClickAwayListener } from "../hooks/useClickAwayListener";
-import { Add } from "./icons/Add";
+import { API } from "../../utils/API";
+import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
+import { useClickAwayListener } from "../../hooks/useClickAwayListener";
+import { Add } from "../../components/icons/Add";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const AddNewColumnForm = () => {

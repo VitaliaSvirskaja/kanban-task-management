@@ -1,15 +1,15 @@
-import { CreateBoardDto } from "../model/CreateBoardDto";
-import { Board } from "../model/Board";
-import { UpdateBoardDto } from "../model/UpdateBoardDto";
-import { BoardColumn } from "../model/BoardColumn";
-import { CreateColumnDto } from "../model/CreateColumnDto";
-import { CreateTaskDto } from "../model/CreateTaskDto";
-import { Task } from "../model/Task";
-import { UpdateTaskDto } from "../model/UpdateTaskDto";
-import { SubTask } from "../model/SubTask";
-import { CreateSubTaskDto } from "../model/CreateSubTaskDto";
-import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
-import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
+import { CreateBoardDto } from "../board/model/CreateBoardDto";
+import { Board } from "../board/model/Board";
+import { UpdateBoardDto } from "../board/model/UpdateBoardDto";
+import { BoardColumn } from "../boardColumn/model/BoardColumn";
+import { CreateColumnDto } from "../boardColumn/model/CreateColumnDto";
+import { CreateTaskDto } from "../task/model/CreateTaskDto";
+import { Task } from "../task/model/Task";
+import { UpdateTaskDto } from "../task/model/UpdateTaskDto";
+import { SubTask } from "../subtask/model/SubTask";
+import { CreateSubTaskDto } from "../subtask/model/CreateSubTaskDto";
+import { UpdateSubTaskDto } from "../subtask/model/UpdateSubTaskDto";
+import { UpdateBoardColumnDto } from "../boardColumn/model/UpdateBoardColumnDto";
 
 const BASE_URL = "http://localhost:8080";
 

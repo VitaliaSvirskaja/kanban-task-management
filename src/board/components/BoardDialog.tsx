@@ -1,14 +1,14 @@
 import { Dialog } from "@headlessui/react";
-import { Input } from "./Input";
+import { Input } from "../../components/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button } from "./Button";
-import { Close } from "./icons/Close";
+import { Button } from "../../components/Button";
+import { Close } from "../../components/icons/Close";
 import { CreateBoardDto } from "../model/CreateBoardDto";
 import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { UpdateBoardDto } from "../model/UpdateBoardDto";
 import { Board } from "../model/Board";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { API } from "./API";
+import { API } from "../../utils/API";
 
 interface Props {
   isOpen: boolean;

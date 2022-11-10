@@ -1,8 +1,8 @@
-import { Delete } from "./icons/Delete";
+import { Delete } from "../../components/icons/Delete";
 import { SubTask } from "../model/SubTask";
 import { useState } from "react";
-import { Input } from "./Input";
-import { API } from "./API";
+import { Input } from "../../components/Input";
+import { API } from "../../utils/API";
 import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

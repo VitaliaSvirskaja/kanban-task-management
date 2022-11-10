@@ -1,15 +1,15 @@
 import { Dialog } from "@headlessui/react";
-import { Close } from "./icons/Close";
-import { Input } from "./Input";
-import { Button } from "./Button";
+import { Close } from "../../components/icons/Close";
+import { Input } from "../../components/Input";
+import { Button } from "../../components/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { API } from "./API";
+import { API } from "../../utils/API";
 import { Task } from "../model/Task";
 import { UpdateTaskDto } from "../model/UpdateTaskDto";
-import { NewSubTaskForm } from "./NewSubTaskForm";
-import { Delete } from "./icons/Delete";
-import { Subtask } from "./Subtask";
-import { useSubtasks } from "../hooks/useSubtasks";
+import { NewSubTaskForm } from "../../subtask/components/NewSubTaskForm";
+import { Delete } from "../../components/icons/Delete";
+import { Subtask } from "../../subtask/components/Subtask";
+import { useSubtasks } from "../../subtask/hooks/useSubtasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {

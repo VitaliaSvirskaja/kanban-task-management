@@ -1,7 +1,7 @@
 import { useSelectedBoard } from "../context/SelectedBoardContext";
-import { API } from "./API";
-import { AddNewColumnForm } from "./AddNewColumnForm";
-import { BoardColumnComponent } from "./BoardColumnComponent";
+import { API } from "../../utils/API";
+import { AddNewColumnForm } from "../../boardColumn/components/AddNewColumnForm";
+import { BoardColumnComponent } from "../../boardColumn/components/BoardColumnComponent";
 import { NoExistingBoards } from "./NoExistingBoards";
 import { useQuery } from "@tanstack/react-query";
 import { useBoards } from "../hooks/useBoards";

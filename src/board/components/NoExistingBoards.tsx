@@ -1,5 +1,5 @@
-import { Button } from "./Button";
-import { Add } from "./icons/Add";
+import { Button } from "../../components/Button";
+import { Add } from "../../components/icons/Add";
 
 interface Props {
   onAddNewBoard: () => void;

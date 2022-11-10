@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Task } from "../model/Task";
-import { TaskDialog } from "./TaskDialog";
+import { Task } from "../../task/model/Task";
+import { TaskDialog } from "../../task/components/TaskDialog";
 import { BoardColumn } from "../model/BoardColumn";
-import { API } from "./API";
-import { AddNewTaskForm } from "./AddNewTaskForm";
-import { Input } from "./Input";
-import { Delete } from "./icons/Delete";
-import { ConfirmationDialog } from "./ConfirmationDialog";
-import { TaskComponent } from "./TaskComponent";
+import { API } from "../../utils/API";
+import { AddNewTaskForm } from "../../task/components/AddNewTaskForm";
+import { Input } from "../../components/Input";
+import { Delete } from "../../components/icons/Delete";
+import { ConfirmationDialog } from "../../components/ConfirmationDialog";
+import { TaskComponent } from "../../task/components/TaskComponent";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
-import { useTasks } from "../hooks/useTasks";
+import { useTasks } from "../../task/hooks/useTasks";
 
 interface Props {
   boardColumn: BoardColumn;

@@ -1,5 +1,5 @@
 import { SubTask } from "../model/SubTask";
-import { API } from "../components/API";
+import { API } from "../../utils/API";
 import { useQuery } from "@tanstack/react-query";
 
 export function useSubtasks(taskID: number): Array<SubTask> {

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { API } from "../components/API";
+import { API } from "../../utils/API";
 import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { Board } from "../model/Board";
 

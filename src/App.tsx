@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { ShowSidebar } from "./components/icons/ShowSidebar";
-import { BoardDialog } from "./components/BoardDialog";
-import { Board } from "./model/Board";
-import { BoardContent } from "./components/BoardContent";
-import { useSelectedBoard } from "./context/SelectedBoardContext";
+import { BoardDialog } from "./board/components/BoardDialog";
+import { Board } from "./board/model/Board";
+import { BoardContent } from "./board/components/BoardContent";
+import { useSelectedBoard } from "./board/context/SelectedBoardContext";
 import { ConfirmationDialog } from "./components/ConfirmationDialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { API } from "./components/API";
+import { API } from "./utils/API";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
