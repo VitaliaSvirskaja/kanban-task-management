@@ -1,10 +1,9 @@
 import { useSelectedBoard } from "../context/SelectedBoardContext";
-import { API } from "../../utils/API";
 import { AddNewColumnForm } from "../../boardColumn/components/AddNewColumnForm";
 import { BoardColumnComponent } from "../../boardColumn/components/BoardColumnComponent";
 import { NoExistingBoards } from "./NoExistingBoards";
-import { useQuery } from "@tanstack/react-query";
 import { useBoards } from "../hooks/useBoards";
+import { useBoardColumns } from "../../boardColumn/hooks/useBoardColumns";
 
 interface Props {
   onAddNewBoard: () => void;
@@ -13,16 +12,7 @@ interface Props {
 export const BoardContent = ({ onAddNewBoard }: Props) => {
   const { selectedBoardID } = useSelectedBoard();
   const boards = useBoards();
-
-  const { data: boardColumns } = useQuery({
-    queryKey: ["boardColumns", selectedBoardID],
-    queryFn: () => {
-      if (selectedBoardID) {
-        return API.getColumns(selectedBoardID);
-      }
-    },
-    enabled: selectedBoardID !== null,
-  });
+  const boardColumns = useBoardColumns();
 
   if (boards.length === 0) {
     return <NoExistingBoards onAddNewBoard={onAddNewBoard} />;
@@ -30,7 +20,7 @@ export const BoardContent = ({ onAddNewBoard }: Props) => {
 
   return (
     <div className="flex justify-items-start gap-6 p-8 dark:bg-very-dark-grey">
-      {boardColumns?.map((boardColumn) => (
+      {boardColumns.map((boardColumn) => (
         <BoardColumnComponent
           key={boardColumn.id}
           boardColumn={boardColumn}
