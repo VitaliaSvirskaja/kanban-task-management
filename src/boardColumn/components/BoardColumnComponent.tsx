@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
 import { useTasks } from "../../task/hooks/useTasks";
 import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
+import { useBoardColumnMutations } from "../hooks/useBoardColumnMutations";
 
 interface Props {
   boardColumn: BoardColumn;
@@ -32,23 +33,9 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
   );
 
   const queryClient = useQueryClient();
-  const updateBoardColumnMutation = useMutation({
-    mutationFn: (updateBoardColumnDto: UpdateBoardColumnDto) => {
-      return API.updateColumn(boardColumn.id, updateBoardColumnDto);
-    },
-    onSuccess: (updatedBoardColumn) => {
-      queryClient.setQueryData(
-        ["boardColumns", selectedBoardID],
-        (prevBoardColumns?: Array<BoardColumn>) => {
-          return prevBoardColumns?.map((prevBoardColumn) => {
-            return prevBoardColumn.id === updatedBoardColumn.id
-              ? updatedBoardColumn
-              : prevBoardColumn;
-          });
-        }
-      );
-    },
-  });
+
+  const { updateBoardColumnMutation, deleteBoardColumnMutation } =
+    useBoardColumnMutations();
 
   function updateBoardColumn() {
     if (selectedBoardID === null) {
@@ -58,23 +45,12 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
       boardId: selectedBoardID,
       title: editedBoardColumnTitle,
     };
-    updateBoardColumnMutation.mutate(updateBoardColumnDto);
+    updateBoardColumnMutation.mutate({
+      boardColumID: boardColumn.id,
+      updateBoardColumnDto: updateBoardColumnDto,
+    });
     setIsEditingBoardColumnTitle(false);
   }
-
-  const deleteBoardColumnMutation = useMutation({
-    mutationFn: API.deleteColumn,
-    onSuccess: (_data, deletedBoardColumnID) => {
-      queryClient.setQueryData(
-        ["boardColumns", selectedBoardID],
-        (prevBoardColumns?: Array<BoardColumn>) => {
-          return prevBoardColumns?.filter((prevBoardColumn) => {
-            return prevBoardColumn.id !== deletedBoardColumnID;
-          });
-        }
-      );
-    },
-  });
 
   const deleteTaskMutation = useMutation({
     mutationFn: API.deleteTask,

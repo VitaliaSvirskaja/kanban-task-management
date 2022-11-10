@@ -2,12 +2,10 @@ import { Input } from "../../components/Input";
 import { Close } from "../../components/icons/Close";
 import { FormEvent, useRef, useState } from "react";
 import { CreateColumnDto } from "../model/CreateColumnDto";
-import { BoardColumn } from "../model/BoardColumn";
-import { API } from "../../utils/API";
 import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
 import { useClickAwayListener } from "../../hooks/useClickAwayListener";
 import { Add } from "../../components/icons/Add";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useBoardColumnMutations } from "../hooks/useBoardColumnMutations";
 
 export const AddNewColumnForm = () => {
   const { selectedBoardID } = useSelectedBoard();
@@ -15,21 +13,9 @@ export const AddNewColumnForm = () => {
   const [isAddingNewColumn, setIsAddingNewColumn] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const queryClient = useQueryClient();
-  const createBoardColumnMutation = useMutation({
-    mutationFn: API.createColumn,
-    onSuccess: (createdBoardColumn) => {
-      queryClient.setQueryData(
-        ["boardColumns", selectedBoardID],
-        (prevBoardColumns?: Array<BoardColumn>) => [
-          ...(prevBoardColumns ?? []),
-          createdBoardColumn,
-        ]
-      );
-    },
-  });
-
   useClickAwayListener(formRef, () => setIsAddingNewColumn(false));
+
+  const { createBoardColumnMutation } = useBoardColumnMutations();
 
   async function handleNewColumn() {
     if (selectedBoardID === null || columnName === "") {
