@@ -101,7 +101,7 @@ async function createColumn(
 
 async function updateColumn(
   boardColumnID: number,
-  updateColumnDto: UpdateBoardColumnDto
+  updateBoardColumnDto: UpdateBoardColumnDto
 ): Promise<BoardColumn> {
   try {
     const response = await fetch(`${BASE_URL}/board-columns/${boardColumnID}`, {
@@ -109,7 +109,7 @@ async function updateColumn(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(updateColumnDto),
+      body: JSON.stringify(updateBoardColumnDto),
     });
     return await response.json();
   } catch (e) {
