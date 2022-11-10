@@ -5,10 +5,8 @@ import { ShowSidebar } from "./components/icons/ShowSidebar";
 import { BoardDialog } from "./board/components/BoardDialog";
 import { Board } from "./board/model/Board";
 import { BoardContent } from "./board/components/BoardContent";
-import { useSelectedBoard } from "./board/context/SelectedBoardContext";
 import { ConfirmationDialog } from "./components/ConfirmationDialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { API } from "./utils/API";
+import { useBoardMutations } from "./board/hooks/useBoardMutations";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -19,24 +17,8 @@ export const App = () => {
     "create"
   );
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
-  const { selectedBoardID, selectBoard } = useSelectedBoard();
 
-  const queryClient = useQueryClient();
-  const deleteBoardMutation = useMutation({
-    mutationFn: API.deleteBoard,
-    onSuccess: (_data, deletedBoardID) => {
-      queryClient.setQueryData(["boards"], (prevBoards?: Array<Board>) => {
-        const updatedBoards = prevBoards?.filter((prevBoard) => {
-          return prevBoard.id !== deletedBoardID;
-        });
-
-        if (selectedBoardID === deletedBoardID && updatedBoards !== undefined) {
-          selectBoard(updatedBoards[0]?.id ?? null);
-        }
-        return updatedBoards;
-      });
-    },
-  });
+  const { deleteBoardMutation } = useBoardMutations();
 
   function handleCreateNewBoard() {
     setDialogVariant("create");

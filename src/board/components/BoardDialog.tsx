@@ -4,11 +4,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../../components/Button";
 import { Close } from "../../components/icons/Close";
 import { CreateBoardDto } from "../model/CreateBoardDto";
-import { useSelectedBoard } from "../context/SelectedBoardContext";
 import { UpdateBoardDto } from "../model/UpdateBoardDto";
 import { Board } from "../model/Board";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { API } from "../../utils/API";
+import { useBoardMutations } from "../hooks/useBoardMutations";
 
 interface Props {
   isOpen: boolean;
@@ -30,7 +28,6 @@ export const BoardDialog = ({
   selectedBoard,
   onDeleteBoard,
 }: Props) => {
-  const { selectBoard } = useSelectedBoard();
   const {
     register,
     handleSubmit,
@@ -43,36 +40,7 @@ export const BoardDialog = ({
     },
   });
 
-  const queryClient = useQueryClient();
-  const createBoardMutation = useMutation({
-    mutationFn: API.createBoard,
-    onSuccess: (createdBoard) => {
-      queryClient.setQueryData(["boards"], (prevBoards?: Array<Board>) => [
-        ...(prevBoards ?? []),
-        createdBoard,
-      ]);
-      selectBoard(createdBoard.id);
-    },
-  });
-
-  const updateBoardMutation = useMutation({
-    mutationFn: ({
-      selectedBoardID,
-      updateBoardDto,
-    }: {
-      selectedBoardID: number;
-      updateBoardDto: UpdateBoardDto;
-    }) => {
-      return API.updateBoard(selectedBoardID, updateBoardDto);
-    },
-    onSuccess: (updatedBoard: Board) => {
-      queryClient.setQueryData(["boards"], (prevBoards?: Array<Board>) => {
-        return prevBoards?.map((prevBoard) => {
-          return prevBoard.id === updatedBoard.id ? updatedBoard : prevBoard;
-        });
-      });
-    },
-  });
+  const { createBoardMutation, updateBoardMutation } = useBoardMutations();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (variant === "create") {
