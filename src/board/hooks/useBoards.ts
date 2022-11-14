@@ -5,15 +5,14 @@ import { Board } from "../model/Board";
 
 export function useBoards(): Array<Board> {
   const { selectBoard } = useSelectedBoard();
-  const { data: boards } = useQuery({
+  const { data: boards, isFetchedAfterMount } = useQuery({
     queryKey: ["boards"],
     queryFn: API.fetchBoards,
     onSuccess: (fetchedBoards) => {
-      if (fetchedBoards !== undefined) {
+      if (!isFetchedAfterMount) {
         selectBoard(fetchedBoards[0]?.id ?? null);
       }
     },
   });
-
   return boards ?? [];
 }
