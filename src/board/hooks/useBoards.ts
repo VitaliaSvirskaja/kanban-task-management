@@ -9,10 +9,12 @@ export function useBoards(): Array<Board> {
     queryKey: ["boards"],
     queryFn: API.fetchBoards,
     onSuccess: (fetchedBoards) => {
-      if (!isFetchedAfterMount) {
+      const isFirstFetch = !isFetchedAfterMount;
+      if (isFirstFetch) {
         selectBoard(fetchedBoards[0]?.id ?? null);
       }
     },
   });
+
   return boards ?? [];
 }
