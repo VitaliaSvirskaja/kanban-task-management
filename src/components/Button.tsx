@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react";
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "large" | "small";
   variant?: "primary" | "secondary" | "destructive";
   text: string;
@@ -14,7 +14,7 @@ export const Button = ({
   icon,
   className,
   ...buttonProps
-}: Props) => (
+}: ButtonProps) => (
   <button
     className={`heading-m flex w-full items-center justify-center gap-2 rounded-full px-6 transition-colors  focus:outline-2 focus:outline-primary disabled:opacity-40 ${
       variant === "primary"
