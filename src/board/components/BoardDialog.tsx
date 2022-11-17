@@ -7,6 +7,7 @@ import { CreateBoardDto } from "../model/CreateBoardDto";
 import { UpdateBoardDto } from "../model/UpdateBoardDto";
 import { Board } from "../model/Board";
 import { useBoardMutations } from "../hooks/useBoardMutations";
+import { LoadingButton } from "../../components/LoadingButton";
 
 interface Props {
   isOpen: boolean;
@@ -20,7 +21,6 @@ type Inputs = {
   boardName: string;
 };
 
-// TODO: implement loading indicator
 export const BoardDialog = ({
   isOpen,
   onClose,
@@ -100,12 +100,15 @@ export const BoardDialog = ({
             />
 
             <div className=" flex w-full flex-col gap-3">
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="primary"
                 size="small"
                 text={
                   variant === "create" ? "Create New Board" : "Save Changes"
+                }
+                isLoading={
+                  createBoardMutation.isLoading || updateBoardMutation.isLoading
                 }
               />
               {variant === "edit" && (

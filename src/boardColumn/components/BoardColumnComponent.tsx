@@ -12,6 +12,8 @@ import { useTasks } from "../../task/hooks/useTasks";
 import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
 import { useBoardColumnMutations } from "../hooks/useBoardColumnMutations";
 import { useTaskMutations } from "../../task/hooks/useTaskMutations";
+import { LoadingCircle } from "../../components/icons/LoadingCircle";
+import { useIsMutating } from "@tanstack/react-query";
 
 interface Props {
   boardColumn: BoardColumn;
@@ -52,7 +54,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
   }
 
   async function handleDeleteTask(taskID: number) {
-    deleteTaskMutation.mutate(taskID);
+    await deleteTaskMutation.mutateAsync(taskID);
     setIsTaskDialogOpen(false);
     setIsConfirmDialogOpen(false);
   }
@@ -73,21 +75,12 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
           }}
         />
       ) : (
-        <>
-          {updateBoardColumnMutation.isLoading ||
-          deleteBoardColumnMutation.isLoading ? (
-            <div className="heading-s py-3 px-1 text-medium-grey">
-              Loading...
-            </div>
-          ) : (
-            <BoardColumnTitle
-              title={boardColumn.title}
-              taskCount={tasks.length}
-              onClick={() => setIsEditingBoardColumnTitle(true)}
-              onDelete={() => deleteBoardColumnMutation.mutate(boardColumn.id)}
-            />
-          )}
-        </>
+        <BoardColumnTitle
+          title={boardColumn.title}
+          taskCount={tasks.length}
+          onClick={() => setIsEditingBoardColumnTitle(true)}
+          onDelete={() => deleteBoardColumnMutation.mutate(boardColumn.id)}
+        />
       )}
 
       {tasks.length > 0 && (
@@ -125,6 +118,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
             title="Delete this task?"
             description={`Are you sure you want to delete the ‘${taskToBeUpdated.title}’ task and its subtasks? This action cannot be reversed.`}
             open={isConfirmDialogOpen}
+            isLoading={deleteTaskMutation.isLoading}
             onClose={() => {
               setIsTaskDialogOpen(true);
               setIsConfirmDialogOpen(false);
@@ -151,6 +145,9 @@ const BoardColumnTitle = ({
   onDelete,
 }: BoardColumnTitleProps) => {
   const [isHovering, setIsHovering] = useState(false);
+  const isDeletingBoardColumn = useIsMutating({
+    mutationKey: ["deleteBoardColumn"],
+  });
 
   return (
     <div
@@ -162,11 +159,13 @@ const BoardColumnTitle = ({
         className="heading-s h-10 flex-1 cursor-pointer overflow-hidden text-ellipsis py-3 px-1"
         onClick={onClick}
       >{`${title.toUpperCase()} (${taskCount})`}</div>
-      {isHovering && (
+      {isHovering && !isDeletingBoardColumn && (
         <button onClick={onDelete}>
           <Delete />
         </button>
       )}
+
+      {!!isDeletingBoardColumn && <LoadingCircle />}
     </div>
   );
 };

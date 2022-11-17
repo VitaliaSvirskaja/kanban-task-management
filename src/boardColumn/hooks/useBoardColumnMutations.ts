@@ -47,6 +47,7 @@ export function useBoardColumnMutations() {
 
   const deleteBoardColumnMutation = useMutation({
     mutationFn: API.deleteColumn,
+    mutationKey: ["deleteBoardColumn"],
     onSuccess: (_data, deletedBoardColumnID) => {
       queryClient.setQueryData(
         ["boardColumns", selectedBoardID],

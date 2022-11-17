@@ -6,6 +6,7 @@ import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
 import { useClickAwayListener } from "../../hooks/useClickAwayListener";
 import { Add } from "../../components/icons/Add";
 import { useBoardColumnMutations } from "../hooks/useBoardColumnMutations";
+import { LoadingButton } from "../../components/LoadingButton";
 
 export const AddNewColumnForm = () => {
   const { selectedBoardID } = useSelectedBoard();
@@ -58,24 +59,16 @@ export const AddNewColumnForm = () => {
           />
 
           <div className="flex gap-2">
-            {createBoardColumnMutation.isLoading ? (
-              <div>Loading...</div>
-            ) : (
-              <>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary dark:bg-primary dark:hover:bg-primary-light dark:hover:text-dark-grey"
-                >
-                  Add New Column
-                </button>
-                <button
-                  type="reset"
-                  onClick={() => setIsAddingNewColumn(false)}
-                >
-                  <Close />
-                </button>
-              </>
-            )}
+            <LoadingButton
+              type="submit"
+              text="Save"
+              variant="primary"
+              size="small"
+              isLoading={createBoardColumnMutation.isLoading}
+            />
+            <button type="reset" onClick={() => setIsAddingNewColumn(false)}>
+              <Close />
+            </button>
           </div>
         </form>
       ) : (

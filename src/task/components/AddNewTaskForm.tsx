@@ -5,12 +5,12 @@ import { Close } from "../../components/icons/Close";
 import { useClickAwayListener } from "../../hooks/useClickAwayListener";
 import { CreateTaskDto } from "../model/CreateTaskDto";
 import { useTaskMutations } from "../hooks/useTaskMutations";
+import { LoadingButton } from "../../components/LoadingButton";
 
 interface Props {
   boardColumnId: number;
 }
 
-// TODO: implement loading indicator
 export const AddNewTaskForm = ({ boardColumnId }: Props) => {
   const [isAddingNewTask, setIsAddingNewTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
@@ -50,12 +50,15 @@ export const AddNewTaskForm = ({ boardColumnId }: Props) => {
             className="rounded-lg"
           />
           <div className="flex gap-2">
-            <button
+            <LoadingButton
+              size="small"
+              variant="primary"
+              text="Add New Task"
+              isLoading={createNewTaskMutation.isLoading}
               type="submit"
               className="body-l rounded-lg bg-primary-light px-4 py-2 text-white hover:bg-primary dark:bg-primary dark:hover:bg-primary-light dark:hover:text-dark-grey"
-            >
-              Add New Task
-            </button>
+            />
+
             <button type="reset" onClick={() => setIsAddingNewTask(false)}>
               <Close />
             </button>

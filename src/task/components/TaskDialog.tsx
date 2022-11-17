@@ -10,6 +10,7 @@ import { Delete } from "../../components/icons/Delete";
 import { Subtask } from "../../subtask/components/Subtask";
 import { useSubtasks } from "../../subtask/hooks/useSubtasks";
 import { useTaskMutations } from "../hooks/useTaskMutations";
+import { LoadingButton } from "../../components/LoadingButton";
 
 interface Props {
   boardColumnID: number;
@@ -57,7 +58,7 @@ export const TaskDialog = ({
     if (initialTaskValue?.id === undefined) {
       return;
     }
-    updateTaskMutation.mutate({
+    await updateTaskMutation.mutateAsync({
       taskID: initialTaskValue.id,
       updateTaskDto: updateTaskDto,
     });
@@ -133,12 +134,12 @@ export const TaskDialog = ({
             </div>
 
             <div className=" flex w-full flex-col gap-3">
-              {/* TODO: loading indicator while waiting for response */}
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="primary"
                 size="small"
                 text="Edit Task"
+                isLoading={updateTaskMutation.isLoading}
               />
               <Button
                 type="button" // prevent submit event of task dialog

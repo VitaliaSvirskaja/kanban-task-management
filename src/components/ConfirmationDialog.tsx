@@ -1,5 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { Button } from "./Button";
+import { LoadingButton } from "./LoadingButton";
 
 interface Props {
   title: string;
@@ -7,6 +8,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoading: boolean;
 }
 
 export const ConfirmationDialog = ({
@@ -15,6 +17,7 @@ export const ConfirmationDialog = ({
   open,
   onClose,
   onConfirm,
+  isLoading,
 }: Props) => (
   <Dialog open={open} onClose={onClose} className="relative z-50">
     {/* Backdrop */}
@@ -30,11 +33,12 @@ export const ConfirmationDialog = ({
             <p className="body-l text-medium-grey">{description}</p>
           </div>
           <div className="flex gap-4">
-            <Button
+            <LoadingButton
               text="Delete"
               variant="destructive"
               size="small"
               onClick={onConfirm}
+              isLoading={isLoading}
             />
             <Button
               text="Cancel"

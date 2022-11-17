@@ -36,7 +36,7 @@ export const App = () => {
     if (selectedBoard?.id === undefined) {
       return;
     }
-    deleteBoardMutation.mutate(selectedBoard.id);
+    await deleteBoardMutation.mutateAsync(selectedBoard.id);
     setIsConfirmDialogOpen(false);
   }
 
@@ -81,6 +81,7 @@ export const App = () => {
           title="Delete this board?"
           description={`Are you sure you want to delete the ‘${selectedBoard?.title}’ board? This action will remove all columns and tasks and cannot be reversed.`}
           open={isConfirmDialogOpen}
+          isLoading={deleteBoardMutation.isLoading}
           onClose={() => {
             setIsConfirmDialogOpen(false);
             setIsBoardDialogOpen(true);
