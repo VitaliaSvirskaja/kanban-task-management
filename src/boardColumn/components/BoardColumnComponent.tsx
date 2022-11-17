@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Task } from "../../task/model/Task";
+import { useReducer, useState } from "react";
 import { TaskDialog } from "../../task/components/TaskDialog";
 import { BoardColumn } from "../model/BoardColumn";
 import { AddNewTaskForm } from "../../task/components/AddNewTaskForm";
@@ -14,6 +13,7 @@ import { useBoardColumnMutations } from "../hooks/useBoardColumnMutations";
 import { useTaskMutations } from "../../task/hooks/useTaskMutations";
 import { LoadingCircle } from "../../components/icons/LoadingCircle";
 import { useIsMutating } from "@tanstack/react-query";
+import { taskReducer } from "../../task/reducer/taskReducer";
 
 interface Props {
   boardColumn: BoardColumn;
@@ -22,10 +22,13 @@ interface Props {
 export const BoardColumnComponent = ({ boardColumn }: Props) => {
   const { selectedBoardID } = useSelectedBoard();
 
-  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [taskToBeUpdated, setTaskToBeUpdated] = useState<Task | null>(null);
   const tasks = useTasks(boardColumn.id);
+  const [{ isConfirmDialogOpen, isDialogOpen, taskToBeUpdated }, dispatch] =
+    useReducer(taskReducer, {
+      isDialogOpen: false,
+      isConfirmDialogOpen: false,
+      taskToBeUpdated: null,
+    });
 
   const [isEditingBoardColumnTitle, setIsEditingBoardColumnTitle] =
     useState(false);
@@ -55,9 +58,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
 
   async function handleDeleteTask(taskID: number) {
     await deleteTaskMutation.mutateAsync(taskID);
-    setIsTaskDialogOpen(false);
-    setIsConfirmDialogOpen(false);
-    setTaskToBeUpdated(null);
+    dispatch({ type: "confirmTaskDelete" });
   }
 
   return (
@@ -90,10 +91,9 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
             <TaskComponent
               key={task.id}
               task={task}
-              onClick={() => {
-                setIsTaskDialogOpen(true);
-                setTaskToBeUpdated(task);
-              }}
+              onClick={() =>
+                dispatch({ type: "selectTaskToBeUpdated", payload: task })
+              }
             />
           ))}
         </div>
@@ -104,26 +104,17 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
           <TaskDialog
             boardColumnID={boardColumn.id}
             key={taskToBeUpdated.id}
-            isOpen={isTaskDialogOpen}
-            onClose={() => {
-              setIsTaskDialogOpen(false);
-              setTaskToBeUpdated(null);
-            }}
+            isOpen={isDialogOpen}
+            onClose={() => dispatch({ type: "closeTaskDialog" })}
             initialTaskValue={taskToBeUpdated}
-            onDeleteTask={() => {
-              setIsConfirmDialogOpen(true);
-              setIsTaskDialogOpen(false);
-            }}
+            onDeleteTask={() => dispatch({ type: "openDeleteTaskDialog" })}
           />
           <ConfirmationDialog
             title="Delete this task?"
             description={`Are you sure you want to delete the ‘${taskToBeUpdated.title}’ task and its subtasks? This action cannot be reversed.`}
             open={isConfirmDialogOpen}
             isLoading={deleteTaskMutation.isLoading}
-            onClose={() => {
-              setIsTaskDialogOpen(true);
-              setIsConfirmDialogOpen(false);
-            }}
+            onClose={() => dispatch({ type: "closeConfirmation" })}
             onConfirm={() => handleDeleteTask(taskToBeUpdated.id)}
           />
         </>
