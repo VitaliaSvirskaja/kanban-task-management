@@ -57,6 +57,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
     await deleteTaskMutation.mutateAsync(taskID);
     setIsTaskDialogOpen(false);
     setIsConfirmDialogOpen(false);
+    setTaskToBeUpdated(null);
   }
 
   return (
