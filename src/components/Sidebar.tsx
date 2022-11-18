@@ -22,7 +22,7 @@ export const Sidebar = ({
   onEditBoard,
 }: Props) => {
   const { selectBoard, selectedBoardID } = useSelectedBoard();
-  const boards = useBoards();
+  const { data: boards, isInitialLoading } = useBoards();
 
   return (
     <aside
@@ -30,11 +30,14 @@ export const Sidebar = ({
         isSidebarVisible ? "" : "-translate-x-full"
       }`}
     >
-      <div className="heading-s py-4 pl-8">ALL BOARDS ({boards.length})</div>
+      <div className="heading-s py-4 pl-8">ALL BOARDS ({boards?.length})</div>
 
       <div className="flex flex-1 flex-col justify-between">
         <div>
-          {boards.map((board) => (
+          {isInitialLoading && (
+            <div className="h-16 animate-pulse rounded-r-full bg-gray-300" />
+          )}
+          {boards?.map((board) => (
             <ListElement
               key={board.id}
               icon={<BoardIcon />}

@@ -9,10 +9,10 @@ interface Props {
 }
 
 export const BoardContent = ({ onAddNewBoard }: Props) => {
-  const boards = useBoards();
+  const { data: boards } = useBoards();
   const boardColumns = useBoardColumns();
 
-  if (boards.length === 0) {
+  if (boards?.length === 0) {
     return <NoExistingBoards onAddNewBoard={onAddNewBoard} />;
   }
 

@@ -4,9 +4,9 @@ import { useBoards } from "./useBoards";
 
 export function useActiveBoardName(): string {
   const { selectedBoardID } = useSelectedBoard();
-  const boards = useBoards();
+  const { data: boards } = useBoards();
   return useMemo<string>(() => {
-    const foundBoard = boards.find((board) => board.id === selectedBoardID);
+    const foundBoard = boards?.find((board) => board.id === selectedBoardID);
     return foundBoard?.title ?? "";
   }, [selectedBoardID, boards]);
 }
