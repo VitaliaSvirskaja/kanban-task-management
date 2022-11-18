@@ -2,20 +2,32 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "../../utils/API";
 import { SubTask } from "../model/SubTask";
 import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
+import { CreateSubTaskDto } from "../model/CreateSubTaskDto";
 
 export function useSubtaskMutations(taskID: number) {
   const queryClient = useQueryClient();
 
   const createSubTaskMutation = useMutation({
     mutationFn: API.createSubTask,
-    onSuccess: (createdSubTask) => {
+    onMutate: (createSubTaskDto: CreateSubTaskDto) => {
+      const prevSubtasks: Array<SubTask> =
+        queryClient.getQueryData(["subTasks", taskID]) ?? [];
+      const newSubtask: SubTask = {
+        id: Date.now(),
+        text: createSubTaskDto.text,
+        done: false,
+      };
       queryClient.setQueryData(
         ["subTasks", taskID],
-        (prevSubTasks?: Array<SubTask>) => [
-          ...(prevSubTasks ?? []),
-          createdSubTask,
-        ]
+        [...prevSubtasks, newSubtask]
       );
+      return { prevSubtasks };
+    },
+    onError: (_error, _variables, context) => {
+      queryClient.setQueryData(["subTasks", taskID], context?.prevSubtasks);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["subTasks", taskID]);
     },
   });
 
@@ -29,31 +41,41 @@ export function useSubtaskMutations(taskID: number) {
     }) => {
       return API.updateSubTask(subtaskID, updateSubtaskDto);
     },
-    onSuccess: (updatedSubTask) => {
+    onMutate: ({ subtaskID, updateSubtaskDto }) => {
+      const prevSubtasks: Array<SubTask> =
+        queryClient.getQueryData(["subTasks", taskID]) ?? [];
+      const updatedSubtask: SubTask = {
+        id: subtaskID,
+        text: updateSubtaskDto.text,
+        done: updateSubtaskDto.done,
+      };
       queryClient.setQueryData(
         ["subTasks", taskID],
-        (prevSubtasks?: Array<SubTask>) => {
-          return prevSubtasks?.map((prevSubtak) => {
-            return prevSubtak.id === updatedSubTask.id
-              ? updatedSubTask
-              : prevSubtak;
-          });
-        }
+        prevSubtasks.map((prevSubtask) => {
+          return prevSubtask.id === subtaskID ? updatedSubtask : prevSubtask;
+        })
       );
+      return { prevSubtasks };
     },
+    onError: (_error, _variables, context) =>
+      queryClient.setQueryData(["subTasks", taskID], context?.prevSubtasks),
   });
 
   const deleteSubTaskMutation = useMutation({
     mutationFn: API.deleteSubTask,
-    onSuccess: (_data, deletedSubTaskID) => {
+    onMutate: (deletedSubTaskID) => {
+      const prevSubtasks: Array<SubTask> =
+        queryClient.getQueryData(["subTasks", taskID]) ?? [];
       queryClient.setQueryData(
         ["subTasks", taskID],
-        (prevSubTasks?: Array<SubTask>) => {
-          return prevSubTasks?.filter((prevSubTask) => {
-            return prevSubTask.id !== deletedSubTaskID;
-          });
-        }
+        prevSubtasks.filter((prevSubtask) => {
+          return prevSubtask.id !== deletedSubTaskID;
+        })
       );
+      return { prevSubtasks };
+    },
+    onError: (_error, _variables, context) => {
+      queryClient.setQueryData(["subTasks", taskID], context?.prevSubtasks);
     },
   });
 
