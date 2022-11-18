@@ -4,6 +4,11 @@ import { BoardColumn } from "../model/BoardColumn";
 import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
 import { UpdateBoardColumnDto } from "../model/UpdateBoardColumnDto";
 
+interface UpdateBoardColumnParam {
+  boardColumID: number;
+  updateBoardColumnDto: UpdateBoardColumnDto;
+}
+
 export function useBoardColumnMutations() {
   const { selectedBoardID } = useSelectedBoard();
   const queryClient = useQueryClient();
@@ -25,22 +30,32 @@ export function useBoardColumnMutations() {
     mutationFn: ({
       boardColumID,
       updateBoardColumnDto,
-    }: {
-      boardColumID: number;
-      updateBoardColumnDto: UpdateBoardColumnDto;
-    }) => {
+    }: UpdateBoardColumnParam) => {
       return API.updateColumn(boardColumID, updateBoardColumnDto);
     },
-    onSuccess: (updatedBoardColumn) => {
+    onMutate: async ({
+      boardColumID,
+      updateBoardColumnDto,
+    }: UpdateBoardColumnParam) => {
+      const queryKey = ["boardColumns", selectedBoardID];
+      const prevBoardColumns: Array<BoardColumn> =
+        queryClient.getQueryData(queryKey) ?? [];
+      const updatedBoardColumn: BoardColumn = {
+        id: boardColumID,
+        title: updateBoardColumnDto.title,
+      };
+      const updatedBoardColumns = prevBoardColumns.map((prevBoardColumn) => {
+        return prevBoardColumn.id === boardColumID
+          ? updatedBoardColumn
+          : prevBoardColumn;
+      });
+      queryClient.setQueryData(queryKey, updatedBoardColumns);
+      return { prevBoardColumns };
+    },
+    onError: (_error, _variables, context) => {
       queryClient.setQueryData(
         ["boardColumns", selectedBoardID],
-        (prevBoardColumns?: Array<BoardColumn>) => {
-          return prevBoardColumns?.map((prevBoardColumn) => {
-            return prevBoardColumn.id === updatedBoardColumn.id
-              ? updatedBoardColumn
-              : prevBoardColumn;
-          });
-        }
+        context?.prevBoardColumns ?? []
       );
     },
   });
