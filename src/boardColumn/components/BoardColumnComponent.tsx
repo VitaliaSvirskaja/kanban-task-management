@@ -22,7 +22,7 @@ interface Props {
 export const BoardColumnComponent = ({ boardColumn }: Props) => {
   const { selectedBoardID } = useSelectedBoard();
 
-  const tasks = useTasks(boardColumn.id);
+  const { data: tasks, isInitialLoading } = useTasks(boardColumn.id);
   const [{ isConfirmDialogOpen, isDialogOpen, taskToBeUpdated }, dispatch] =
     useReducer(taskReducer, {
       isDialogOpen: false,
@@ -79,15 +79,23 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
       ) : (
         <BoardColumnTitle
           title={boardColumn.title}
-          taskCount={tasks.length}
+          taskCount={tasks?.length ?? 0}
           onClick={() => setIsEditingBoardColumnTitle(true)}
           onDelete={() => deleteBoardColumnMutation.mutate(boardColumn.id)}
         />
       )}
 
-      {tasks.length > 0 && (
+      {isInitialLoading && (
+        <>
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
+        </>
+      )}
+
+      {(tasks?.length ?? 0) > 0 && (
         <div className="flex h-fit flex-col gap-3">
-          {tasks.map((task) => (
+          {tasks?.map((task) => (
             <TaskComponent
               key={task.id}
               task={task}

@@ -1,12 +1,9 @@
-import { Task } from "../model/Task";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "../../utils/API";
 
-export function useTasks(boardColumnID: number): Array<Task> {
-  const { data: tasks } = useQuery({
+export function useTasks(boardColumnID: number) {
+  return useQuery({
     queryKey: ["tasks", boardColumnID],
     queryFn: () => API.getTasks(boardColumnID),
   });
-
-  return tasks ?? [];
 }
