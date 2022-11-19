@@ -14,6 +14,7 @@ export const NewSubTaskForm = ({ taskId }: Props) => {
   const [idAddingNewSubTask, setIsAddingNewSubTask] = useState(false);
   const [subTask, setSubTask] = useState("");
   const formRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useClickAwayListener(formRef, () => setIsAddingNewSubTask(false));
 
@@ -29,7 +30,7 @@ export const NewSubTaskForm = ({ taskId }: Props) => {
     };
     createSubTaskMutation.mutate(createSubTaskDto);
     setSubTask("");
-    setIsAddingNewSubTask(false);
+    inputRef.current?.focus();
   }
 
   return (
@@ -40,6 +41,7 @@ export const NewSubTaskForm = ({ taskId }: Props) => {
           className="flex w-full flex-col gap-2 rounded-lg py-2 dark:bg-dark-grey"
         >
           <Input
+            ref={inputRef}
             label="New Subtask"
             value={subTask}
             onChange={(event) => setSubTask(event.target.value)}
