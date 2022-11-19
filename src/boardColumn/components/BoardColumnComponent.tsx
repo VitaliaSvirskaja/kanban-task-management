@@ -12,8 +12,10 @@ import { useSelectedBoard } from "../../board/context/SelectedBoardContext";
 import { useBoardColumnMutations } from "../hooks/useBoardColumnMutations";
 import { useTaskMutations } from "../../task/hooks/useTaskMutations";
 import { LoadingCircle } from "../../components/icons/LoadingCircle";
-import { useIsMutating } from "@tanstack/react-query";
+import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { taskReducer } from "../../task/reducer/taskReducer";
+import { useDrop } from "react-dnd";
+import { Task } from "../../task/model/Task";
 
 interface Props {
   boardColumn: BoardColumn;
@@ -36,10 +38,32 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
     boardColumn.title
   );
 
+  const queryClient = useQueryClient();
+
+  const [hoveredTaskID, setHoveredTaskID] = useState<number | null>(null);
+  const [{ isHovering }, dropRef] = useDrop({
+    accept: "task",
+    drop: async (task: Task) => {
+      await updateTaskMutation.mutateAsync({
+        taskID: task.id,
+        updateTaskDto: {
+          boardColumnId: boardColumn.id,
+          title: task.title,
+          description: task.description,
+        },
+      });
+      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+    hover: (item) => setHoveredTaskID(item.id),
+    collect: (monitor) => ({ isHovering: monitor.isOver() }),
+  });
+
   const { updateBoardColumnMutation, deleteBoardColumnMutation } =
     useBoardColumnMutations();
 
-  const { deleteTaskMutation } = useTaskMutations(boardColumn.id);
+  const { deleteTaskMutation, updateTaskMutation } = useTaskMutations(
+    boardColumn.id
+  );
 
   function updateBoardColumn() {
     if (selectedBoardID === null) {
@@ -62,7 +86,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
   }
 
   return (
-    <div className="flex w-full max-w-[250px] flex-col gap-3">
+    <div ref={dropRef} className="flex w-full max-w-[250px] flex-col gap-3">
       {isEditingBoardColumnTitle ? (
         <Input
           autoFocus
@@ -105,6 +129,10 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
             />
           ))}
         </div>
+      )}
+
+      {isHovering && !tasks?.find((task) => task.id === hoveredTaskID) && (
+        <div className="h-16 rounded-lg bg-lines-light" />
       )}
       <AddNewTaskForm boardColumnId={boardColumn.id} />
       {taskToBeUpdated && (

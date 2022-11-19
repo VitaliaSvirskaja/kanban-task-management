@@ -1,5 +1,6 @@
 import { Task } from "../model/Task";
 import { useSubtasks } from "../../subtask/hooks/useSubtasks";
+import { useDrag } from "react-dnd";
 
 interface Props {
   task: Task;
@@ -14,9 +15,20 @@ export const TaskComponent = ({ task, onClick }: Props) => {
   });
   const checkedSubtasksCount: number = checkedSubtasks.length;
 
+  const [{ isDragging }, dragRef] = useDrag(() => {
+    return {
+      type: "task",
+      item: task,
+      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+    };
+  });
+
   return (
     <button
-      className="heading-m flex w-full flex-col gap-1.5 rounded-lg bg-white py-6 px-4 text-left text-black shadow transition-shadow hover:text-primary hover:shadow-md focus:outline-2 focus:outline-primary dark:bg-dark-grey dark:text-white"
+      ref={dragRef}
+      className={`heading-m flex w-full flex-col gap-1.5 rounded-lg bg-white py-6 px-4 text-left text-black shadow transition-shadow hover:text-primary hover:shadow-md focus:outline-2 focus:outline-primary dark:bg-dark-grey dark:text-white ${
+        isDragging ? "opacity-50" : ""
+      }`}
       onClick={onClick}
     >
       <p>{task.title}</p>
