@@ -17,7 +17,7 @@ export const BoardContent = ({ onAddNewBoard }: Props) => {
   }
 
   return (
-    <div className="flex justify-items-start gap-6 p-8 dark:bg-very-dark-grey">
+    <div className="flex h-full justify-items-start gap-6 p-8 dark:bg-very-dark-grey">
       {isInitialLoading && (
         <div className="flex w-[250px] flex-col gap-3">
           <div className="my-3 h-4 animate-pulse rounded-full bg-gray-300" />
