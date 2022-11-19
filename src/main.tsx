@@ -6,6 +6,8 @@ import { SelectedBoardContextProvider } from "./board/context/SelectedBoardConte
 import { ThemeContextProvider } from "./context/ThemeContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const queryClient = new QueryClient();
 
@@ -14,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <ThemeContextProvider>
         <SelectedBoardContextProvider>
-          <App />
+          <DndProvider backend={HTML5Backend}>
+            <App />
+          </DndProvider>
         </SelectedBoardContextProvider>
       </ThemeContextProvider>
       <ReactQueryDevtools initialIsOpen={false} />
