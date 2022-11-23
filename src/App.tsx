@@ -58,7 +58,7 @@ export const App = () => {
           <BoardContent onAddNewBoard={handleCreateNewBoard} />
         </main>
         <Sidebar
-          isSidebarVisible={isSidebarVisible}
+          isVisible={isSidebarVisible}
           onClose={() => setIsSidebarVisible(false)}
           onCreateNewBoard={handleCreateNewBoard}
           onEditBoard={handleEditBoard}
