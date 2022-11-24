@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "../../components/Input";
 import { UpdateSubTaskDto } from "../model/UpdateSubTaskDto";
 import { useSubtaskMutations } from "../hooks/useSubtaskMutations";
+import { useMobile } from "../../hooks/useMobile";
 
 interface Props {
   subTask: SubTask;
@@ -14,6 +15,7 @@ export const Subtask = ({ subTask, taskID }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [editedSubtaskText, setEditedSubtaskText] = useState(subTask.text);
+  const isMobile = useMobile();
 
   const { updateSubTaskMutation, deleteSubTaskMutation } =
     useSubtaskMutations(taskID);
@@ -72,7 +74,7 @@ export const Subtask = ({ subTask, taskID }: Props) => {
           {subTask.text}
         </span>
       )}
-      {(isHovering || isEditing) && (
+      {(isHovering || isEditing || isMobile) && (
         <button
           type="button" // prevent submit event of task dialog
           onClick={() => deleteSubTaskMutation.mutate(subTask.id)}
