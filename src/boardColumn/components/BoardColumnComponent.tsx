@@ -86,7 +86,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
   }
 
   return (
-    <div ref={dropRef} className="flex w-full max-w-[250px] flex-col gap-3">
+    <div ref={dropRef} className="flex min-w-[250px] snap-start flex-col gap-3">
       {isEditingBoardColumnTitle ? (
         <Input
           autoFocus
