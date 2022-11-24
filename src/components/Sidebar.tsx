@@ -61,7 +61,9 @@ export const Sidebar = ({
           />
         </div>
         <div className="flex flex-col gap-2">
-          <ThemeSwitch />
+          <div className="pl-6">
+            <ThemeSwitch />
+          </div>
           <ListElement
             icon={<HideSidebar />}
             text="Hide Sidebar"
