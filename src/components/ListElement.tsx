@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, useState, MouseEvent } from "react";
+import { ButtonHTMLAttributes, MouseEvent, useState } from "react";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;
@@ -24,7 +24,7 @@ export const ListElement = ({
 
   return (
     <button
-      className={`heading-m flex w-full list-none items-center justify-between rounded-r-full py-5 pr-6 pl-8 transition-colors hover:bg-primary/10 focus:outline-2 focus:outline-primary ${className}`}
+      className={`heading-m flex w-full list-none items-center justify-between rounded-r-full py-3 pr-6 pl-8 transition-colors hover:bg-primary/10 focus:outline-2 focus:outline-primary sm:py-5 ${className}`}
       {...buttonProps}
       onMouseOver={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
