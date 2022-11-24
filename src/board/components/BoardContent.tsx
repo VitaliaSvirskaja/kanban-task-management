@@ -43,10 +43,10 @@ export const BoardContent = ({ onAddNewBoard }: Props) => {
     <div className="relative flex h-full snap-x scroll-pl-4 justify-items-start gap-6 overflow-x-scroll p-8 dark:bg-very-dark-grey">
       {isInitialLoading && (
         <div className="flex w-[250px] flex-col gap-3">
-          <div className="my-3 h-4 animate-pulse rounded-full bg-gray-300" />
-          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
-          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
-          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
+          <div className="my-3 h-4 animate-pulse rounded-full bg-gray-300 dark:bg-dark-grey" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300 dark:bg-dark-grey" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300 dark:bg-dark-grey" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300 dark:bg-dark-grey" />
         </div>
       )}
 

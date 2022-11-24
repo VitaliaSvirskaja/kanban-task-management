@@ -35,7 +35,7 @@ export const Sidebar = ({
       <div className="flex flex-1 flex-col justify-between">
         <div>
           {isInitialLoading && (
-            <div className="h-16 animate-pulse rounded-r-full bg-gray-300" />
+            <div className="h-16 animate-pulse rounded-r-full bg-gray-300 dark:bg-medium-grey" />
           )}
           {boards?.map((board) => (
             <ListElement

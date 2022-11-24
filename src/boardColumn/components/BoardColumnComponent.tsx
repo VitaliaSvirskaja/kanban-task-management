@@ -111,9 +111,9 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
 
       {isInitialLoading && (
         <>
-          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
-          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
-          <div className="h-16 animate-pulse rounded-lg bg-gray-300" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300 dark:bg-dark-grey" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300 dark:bg-dark-grey" />
+          <div className="h-16 animate-pulse rounded-lg bg-gray-300 dark:bg-dark-grey" />
         </>
       )}
 
@@ -132,7 +132,7 @@ export const BoardColumnComponent = ({ boardColumn }: Props) => {
       )}
 
       {isHovering && !tasks?.find((task) => task.id === hoveredTaskID) && (
-        <div className="h-16 rounded-lg bg-lines-light" />
+        <div className="h-16 rounded-lg bg-lines-light dark:bg-dark-grey" />
       )}
       <AddNewTaskForm boardColumnId={boardColumn.id} />
       {taskToBeUpdated && (
