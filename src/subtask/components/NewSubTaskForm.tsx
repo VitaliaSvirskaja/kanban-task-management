@@ -59,7 +59,7 @@ export const NewSubTaskForm = ({ taskId }: Props) => {
             <Button
               size="small"
               variant="primary"
-              text="Add New Subtask"
+              text="Add Subtask"
               icon={<Add />}
               onClick={handleSubmit}
               type="button" // prevent submit event of task dialog
@@ -78,7 +78,7 @@ export const NewSubTaskForm = ({ taskId }: Props) => {
         <Button
           size="small"
           variant="secondary"
-          text="Add New Subtask"
+          text="Add Subtask"
           icon={<Add />}
           type="button" // prevent submit event of task dialog
           className="flex w-full items-center"
