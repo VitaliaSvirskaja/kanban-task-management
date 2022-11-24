@@ -31,7 +31,7 @@ export const TaskComponent = ({ task, onClick }: Props) => {
       }`}
       onClick={onClick}
     >
-      <p>{task.title}</p>
+      <p className="max-w-full break-words">{task.title}</p>
       {subTasks.length > 0 && (
         <p className="body-m text-medium-grey">{`${checkedSubtasksCount}/${subTaskCount} subtasks`}</p>
       )}
