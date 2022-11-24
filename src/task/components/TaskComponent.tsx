@@ -21,7 +21,7 @@ export const TaskComponent = ({ task, onClick }: Props) => {
       item: task,
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     };
-  });
+  }, [task]);
 
   return (
     <button
