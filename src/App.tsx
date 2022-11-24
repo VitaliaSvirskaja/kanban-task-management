@@ -7,9 +7,13 @@ import { Board } from "./board/model/Board";
 import { BoardContent } from "./board/components/BoardContent";
 import { ConfirmationDialog } from "./components/ConfirmationDialog";
 import { useBoardMutations } from "./board/hooks/useBoardMutations";
+import { MobileNavigationDialog } from "./components/MobileNavigationDialog";
+import { useMobile } from "./hooks/useMobile";
 
 export const App = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [isMobileNavigationDialogVisible, setIsMobileNavigationDialogVisible] =
+    useState(false);
   const [isBoardDialogOpen, setIsBoardDialogOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
@@ -20,13 +24,21 @@ export const App = () => {
 
   const { deleteBoardMutation } = useBoardMutations();
 
+  const isMobile = useMobile();
+
   function handleCreateNewBoard() {
+    if (isMobile) {
+      setIsMobileNavigationDialogVisible(false);
+    }
     setDialogVariant("create");
     setIsBoardDialogOpen(true);
     setSelectedBoard(null);
   }
 
   function handleEditBoard(board: Board) {
+    if (isMobile) {
+      setIsMobileNavigationDialogVisible(false);
+    }
     setDialogVariant("edit");
     setIsBoardDialogOpen(true);
     setSelectedBoard(board);
@@ -40,29 +52,51 @@ export const App = () => {
     setIsConfirmDialogOpen(false);
   }
 
+  function handleOpenNavigation() {
+    if (!isMobile) {
+      return;
+    }
+    setIsMobileNavigationDialogVisible(true);
+  }
+
   return (
     <div className="flex h-screen flex-col">
-      <Header />
+      <Header
+        isVisible={isMobileNavigationDialogVisible}
+        onOpenNavigation={handleOpenNavigation}
+      />
       <div className="relative flex h-full">
         <main
           className={`relative z-0 w-full bg-light-grey transition-spacing dark:bg-very-dark-grey ${
-            isSidebarVisible ? "pl-80" : ""
+            isSidebarVisible && !isMobile ? "pl-80" : ""
           }`}
         >
-          <button
-            className={`absolute bottom-6 left-0 z-10 flex items-center rounded-tr-full rounded-br-full bg-primary p-4 pr-6 hover:bg-primary-light `}
-            onClick={() => setIsSidebarVisible(true)}
-          >
-            <ShowSidebar />
-          </button>
+          {!isMobile && (
+            <button
+              className={`absolute bottom-6 left-0 z-10 flex items-center rounded-tr-full rounded-br-full bg-primary p-4 pr-6 hover:bg-primary-light `}
+              onClick={() => setIsSidebarVisible(true)}
+            >
+              <ShowSidebar />
+            </button>
+          )}
           <BoardContent onAddNewBoard={handleCreateNewBoard} />
         </main>
-        <Sidebar
-          isVisible={isSidebarVisible}
-          onClose={() => setIsSidebarVisible(false)}
-          onCreateNewBoard={handleCreateNewBoard}
-          onEditBoard={handleEditBoard}
-        />
+        {isMobile ? (
+          <MobileNavigationDialog
+            open={isMobileNavigationDialogVisible}
+            onClose={() => setIsMobileNavigationDialogVisible(false)}
+            onCreateNewBoard={handleCreateNewBoard}
+            onEditBoard={handleEditBoard}
+          />
+        ) : (
+          <Sidebar
+            isVisible={isSidebarVisible}
+            onClose={() => setIsSidebarVisible(false)}
+            onCreateNewBoard={handleCreateNewBoard}
+            onEditBoard={handleEditBoard}
+          />
+        )}
+
         <BoardDialog
           key={selectedBoard?.id}
           variant={dialogVariant}
