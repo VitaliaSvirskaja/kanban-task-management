@@ -8,6 +8,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:cypress/recommended",
   ],
   overrides: [
     {
@@ -23,5 +24,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint"],
-  rules: {},
+  rules: {
+    "@typescript-eslint/no-namespace": "off",
+  },
 };

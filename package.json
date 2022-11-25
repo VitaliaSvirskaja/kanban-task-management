@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "e2e": "cypress open"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.3",
@@ -30,9 +31,11 @@
     "@typescript-eslint/parser": "^5.39.0",
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.12",
+    "cypress": "^11.2.0",
     "eslint": "^8.25.0",
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
