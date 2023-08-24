@@ -11,7 +11,7 @@ import { CreateSubTaskDto } from "../subtask/model/CreateSubTaskDto";
 import { UpdateSubTaskDto } from "../subtask/model/UpdateSubTaskDto";
 import { UpdateBoardColumnDto } from "../boardColumn/model/UpdateBoardColumnDto";
 
-const BASE_URL= `${process.env.BACKEND_URL}`
+const BASE_URL= `${import.meta.env.BACKEND_URL}`
 async function createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
   try {
     const response = await fetch(`${BASE_URL}/boards`, {
